@@ -1,0 +1,621 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Sản phẩm – Handmade Corner</title>
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🧶</text></svg>" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,600;0,700;1,400&family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" />
+  <link rel="stylesheet" href="css/style.css" />
+  <link rel="stylesheet" href="css/components.css" />
+</head>
+<body>
+  <!-- NAVBAR -->
+  <nav class="navbar" id="navbar">
+    <div class="navbar__inner">
+      <a href="index.html" class="navbar__logo"><span>🧶</span> Handmade Corner</a>
+      <div class="navbar__nav">
+        <a href="index.html">Trang chủ</a>
+        <a href="products.html" class="active">Sản phẩm</a>
+        <a href="orders.html">Đơn hàng</a>
+      </div>
+      <div class="navbar__actions">
+        <a href="cart.html" class="navbar__cart" id="nav-cart">
+          <i class="fas fa-shopping-bag"></i>
+          <span class="cart-badge" id="cart-badge" style="display:none">0</span>
+        </a>
+        <div id="user-nav-action">
+          <button class="btn btn-outline btn-sm" onclick="openAuthModal()">
+            <i class="fas fa-user"></i> Đăng nhập
+          </button>
+        </div>
+        <button class="hamburger" id="hamburger"><span></span><span></span><span></span></button>
+      </div>
+    </div>
+  </nav>
+  <div class="mobile-nav" id="mobile-nav">
+    <a href="index.html">🏠 Trang chủ</a>
+    <a href="products.html">🛍️ Sản phẩm</a>
+    <a href="orders.html">📦 Đơn hàng</a>
+    <a href="cart.html">🛒 Giỏ hàng</a>
+  </div>
+
+  <!-- PAGE HEADER -->
+  <div style="background:var(--bg-section);padding:32px 0 0;">
+    <div class="container">
+      <div class="breadcrumb">
+        <a href="index.html">Trang chủ</a>
+        <span><i class="fas fa-chevron-right" style="font-size:.7rem;"></i></span>
+        <span>Sản phẩm</span>
+      </div>
+      <h1 style="font-size:clamp(1.6rem,3vw,2.2rem);margin-bottom:8px;">Tất cả Sản phẩm</h1>
+      <p style="color:var(--text-medium);margin-bottom:24px;">Khám phá bộ sưu tập handmade phong phú của chúng tôi</p>
+
+      <!-- SEARCH BAR -->
+      <div class="search-bar" style="max-width:560px;margin-bottom:24px;">
+        <input type="text" id="search-input" placeholder="Tìm kiếm sản phẩm..." />
+        <button id="search-btn"><i class="fas fa-search"></i></button>
+      </div>
+
+      <!-- CATEGORY CHIPS -->
+      <div style="display:flex;flex-wrap:wrap;gap:10px;padding-bottom:24px;" id="cat-chips">
+        <!-- Rendered by JS -->
+      </div>
+    </div>
+  </div>
+
+  <div class="container section-sm">
+    <div class="products-page">
+      <!-- SIDEBAR -->
+      <aside class="sidebar" id="sidebar">
+        <div class="sidebar__section">
+          <div class="sidebar__title"><i class="fas fa-list"></i> Danh mục</div>
+          <div class="sidebar__cats" id="sidebar-cats"></div>
+        </div>
+
+        <div class="sidebar__section">
+          <div class="sidebar__title"><i class="fas fa-tags"></i> Khoảng giá</div>
+          <div class="price-range">
+            <div class="price-range__inputs">
+              <input type="number" class="price-range__input" id="price-min" value="0" min="0" placeholder="Từ" />
+              <span class="price-range__sep">–</span>
+              <input type="number" class="price-range__input" id="price-max" value="500000" min="0" placeholder="Đến" />
+            </div>
+            <button class="btn btn-outline btn-sm btn-full" onclick="applyPriceFilter()">Áp dụng</button>
+          </div>
+        </div>
+
+        <div class="sidebar__section">
+          <div class="sidebar__title"><i class="fas fa-sort-amount-down"></i> Sắp xếp</div>
+          <div style="display:flex;flex-direction:column;gap:6px;">
+            <label class="sidebar__cat-item" onclick="setSort('default')">
+              <span>Mặc định</span> <input type="radio" name="sort" value="default" checked style="display:none;" />
+            </label>
+            <label class="sidebar__cat-item" onclick="setSort('price-asc')">
+              <span>Giá tăng dần</span>
+            </label>
+            <label class="sidebar__cat-item" onclick="setSort('price-desc')">
+              <span>Giá giảm dần</span>
+            </label>
+            <label class="sidebar__cat-item" onclick="setSort('popular')">
+              <span>Bán chạy nhất</span>
+            </label>
+            <label class="sidebar__cat-item" onclick="setSort('rating')">
+              <span>Đánh giá cao</span>
+            </label>
+          </div>
+        </div>
+
+        <button class="btn btn-ghost btn-full btn-sm" onclick="resetFilters()" style="margin-top:8px;">
+          <i class="fas fa-redo"></i> Xóa bộ lọc
+        </button>
+      </aside>
+
+      <!-- MAIN CONTENT -->
+      <main>
+        <!-- SORT BAR -->
+        <div class="sort-bar">
+          <div class="sort-bar__left">
+            <span id="result-count" class="sort-label">0 sản phẩm</span>
+          </div>
+          <div class="sort-bar__right">
+            <div class="view-toggle">
+              <button id="view-grid" class="active" onclick="setView('grid')" title="Lưới">
+                <i class="fas fa-th"></i>
+              </button>
+              <button id="view-list" onclick="setView('list')" title="Danh sách">
+                <i class="fas fa-list"></i>
+              </button>
+            </div>
+          </div>
+        </div>
+
+        <!-- ACTIVE FILTERS -->
+        <div id="active-filters" style="display:flex;flex-wrap:wrap;gap:8px;margin-bottom:16px;"></div>
+
+        <!-- PRODUCTS GRID -->
+        <div class="grid-3" id="products-grid">
+          <!-- Rendered by JS -->
+        </div>
+
+        <!-- EMPTY STATE -->
+        <div id="empty-state" class="empty-state hidden">
+          <div class="empty-state__icon">🔍</div>
+          <div class="empty-state__title">Không tìm thấy sản phẩm</div>
+          <p>Thử tìm kiếm với từ khóa khác hoặc xóa bộ lọc</p>
+          <button class="btn btn-primary mt-16" onclick="resetFilters()">Xóa bộ lọc</button>
+        </div>
+
+        <!-- PAGINATION -->
+        <div class="pagination" id="pagination"></div>
+      </main>
+    </div>
+  </div>
+
+  <!-- AUTH MODAL (UNIFIED LOGINS) -->
+  <div id="auth-modal" class="modal-overlay" style="display:none;">
+    <div class="modal" style="max-width:460px;">
+      <div class="modal__header">
+        <div style="display:flex;gap:12px;">
+          <h3 id="auth-tab-customer" onclick="switchAuthTab('customer')" style="cursor:pointer;color:var(--accent);border-bottom:2px solid var(--accent);padding-bottom:4px;font-size:1rem;">Khách hàng</h3>
+          <h3 id="auth-tab-admin" onclick="switchAuthTab('admin')" style="cursor:pointer;color:var(--text-light);padding-bottom:4px;font-size:1rem;">Quản trị viên</h3>
+          <h3 id="auth-tab-register" onclick="switchAuthTab('register')" style="cursor:pointer;color:var(--text-light);padding-bottom:4px;font-size:1rem;">Đăng ký</h3>
+        </div>
+        <button class="modal__close" onclick="closeAuthModal()">×</button>
+      </div>
+      <div class="modal__body">
+        <!-- CUSTOMER LOGIN FORM -->
+        <form id="auth-form-customer" onsubmit="handleCustomerLogin(event)">
+          <div class="form-group">
+            <label class="form-label">Email khách hàng <span class="required">*</span></label>
+            <input type="email" id="login-email" class="form-control" placeholder="khach@gmail.com" required />
+          </div>
+          <div class="form-group">
+            <label class="form-label">Mật khẩu <span class="required">*</span></label>
+            <input type="password" id="login-pass" class="form-control" placeholder="Mật khẩu..." required />
+          </div>
+          <div style="font-size:.78rem;color:var(--text-light);margin-bottom:16px;">Tài khoản mẫu: <strong>khach@gmail.com</strong> / <strong>123456</strong></div>
+          <button type="submit" class="btn btn-primary btn-full btn-lg" id="c-login-btn">
+            <i class="fas fa-sign-in-alt"></i> Đăng nhập Khách hàng
+          </button>
+        </form>
+
+        <!-- ADMIN LOGIN FORM -->
+        <form id="auth-form-admin" onsubmit="handleAdminLoginModal(event)" style="display:none;">
+          <div class="form-group">
+            <label class="form-label">Tên đăng nhập Admin <span class="required">*</span></label>
+            <input type="text" id="admin-login-user" class="form-control" placeholder="admin" required value="admin" />
+          </div>
+          <div class="form-group">
+            <label class="form-label">Mật khẩu Admin <span class="required">*</span></label>
+            <input type="password" id="admin-login-pass" class="form-control" placeholder="admin123" required value="admin123" />
+          </div>
+          <div style="font-size:.78rem;color:var(--text-light);margin-bottom:16px;">Tài khoản mặc định: <strong>admin</strong> / <strong>admin123</strong></div>
+          <button type="submit" class="btn btn-primary btn-full btn-lg" id="a-login-btn">
+            <i class="fas fa-user-shield"></i> Đăng nhập Quản trị viên
+          </button>
+        </form>
+
+        <!-- REGISTER FORM -->
+        <form id="auth-form-register" onsubmit="handleCustomerRegister(event)" style="display:none;">
+          <div class="form-group">
+            <label class="form-label">Họ và tên <span class="required">*</span></label>
+            <input type="text" id="reg-name" class="form-control" placeholder="Nguyễn Văn A" required />
+          </div>
+          <div class="form-group">
+            <label class="form-label">Email <span class="required">*</span></label>
+            <input type="email" id="reg-email" class="form-control" placeholder="email@example.com" required />
+          </div>
+          <div class="form-group">
+            <label class="form-label">Mật khẩu <span class="required">*</span></label>
+            <input type="password" id="reg-pass" class="form-control" placeholder="Tối thiểu 6 ký tự" required minlength="6" />
+          </div>
+          <div class="form-group">
+            <label class="form-label">Số điện thoại</label>
+            <input type="tel" id="reg-phone" class="form-control" placeholder="0901234567" />
+          </div>
+          <button type="submit" class="btn btn-primary btn-full btn-lg" id="c-reg-btn">
+            <i class="fas fa-user-plus"></i> Tạo tài khoản
+          </button>
+        </form>
+      </div>
+    </div>
+  </div>
+
+  <footer class="footer">
+    <div class="container">
+      <div style="display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:20px;">
+        <div class="footer__logo"><span>🧶</span> Handmade Corner</div>
+        <div style="display:flex;gap:20px;flex-wrap:wrap;">
+          <a href="index.html" style="color:rgba(255,255,255,.6);font-size:.88rem;">Trang chủ</a>
+          <a href="products.html" style="color:rgba(255,255,255,.6);font-size:.88rem;">Sản phẩm</a>
+          <a href="orders.html" style="color:rgba(255,255,255,.6);font-size:.88rem;">Đơn hàng</a>
+          <a href="cart.html" style="color:rgba(255,255,255,.6);font-size:.88rem;">Giỏ hàng</a>
+        </div>
+      </div>
+    </div>
+    <div class="footer__bottom"><div class="container">© 2026 Handmade Corner. Made with 💕</div></div>
+  </footer>
+
+  <div id="toast-container"></div>
+
+  <script src="js/store.js"></script>
+  <script>
+    // ── State ────────────────────────────────────────────────
+    let allCategories = [];
+    let currentCat   = null;
+    let currentSort  = 'default';
+    let currentSearch = '';
+    let priceMin = 0, priceMax = 999999999;
+    let currentView = 'grid';
+    const PAGE_SIZE = 12;
+    let currentPage = 1;
+
+    // ── Parse URL params ──────────────────────────────────────
+    const urlParams = new URLSearchParams(window.location.search);
+    if (urlParams.get('cat')) currentCat = urlParams.get('cat');
+    if (urlParams.get('q'))   currentSearch = urlParams.get('q');
+
+    // ── Navbar ────────────────────────────────────────────────
+    window.addEventListener('scroll', () =>
+      document.getElementById('navbar').classList.toggle('scrolled', window.scrollY > 20));
+    document.getElementById('hamburger').addEventListener('click', () => {
+      document.getElementById('hamburger').classList.toggle('open');
+      document.getElementById('mobile-nav').classList.toggle('open');
+    });
+    function updateCartBadge() {
+      const n = Store.getCartCount();
+      const b = document.getElementById('cart-badge');
+      b.textContent = n; b.style.display = n > 0 ? 'flex' : 'none';
+    }
+
+    // ── Toast ────────────────────────────────────────────────
+    function showToast(msg, type = 'success') {
+      const tc = document.getElementById('toast-container');
+      const t = document.createElement('div');
+      t.className = `toast ${type}`;
+      t.innerHTML = `<i class="fas fa-${type==='success'?'check-circle':'times-circle'}"></i> ${msg}`;
+      tc.appendChild(t);
+      setTimeout(() => t.remove(), 3200);
+    }
+
+    // ── Stars ──────────────────────────────────────────────────
+    function renderStars(rating) {
+      if (!rating) return '<span style="color:var(--text-light);font-size:.78rem;">Chưa có đánh giá</span>';
+      let s = '';
+      for (let i = 1; i <= 5; i++)
+        s += `<i class="${i<=Math.round(rating)?'fas':'far'} fa-star" style="color:#F59E0B;font-size:.78rem;"></i>`;
+      return s;
+    }
+
+    // ── Render Category Chips ──────────────────────────────────
+    function renderCatChips() {
+      const chips = document.getElementById('cat-chips');
+      chips.innerHTML = `<button class="category-chip ${!currentCat?'active':''}" onclick="setCat(null)">Tất cả</button>`;
+      chips.innerHTML += allCategories.map(c =>
+        `<button class="category-chip ${currentCat===c.id?'active':''}" onclick="setCat('${c.id}')">${c.icon} ${c.name}</button>`
+      ).join('');
+    }
+
+    // ── Render Sidebar Cats ────────────────────────────────────
+    async function renderSidebarCats() {
+      const products = await Store.getProducts();
+      const el = document.getElementById('sidebar-cats');
+      el.innerHTML = `<div class="sidebar__cat-item ${!currentCat?'active':''}" onclick="setCat(null)">
+        <span>📦 Tất cả</span>
+        <span class="sidebar__cat-count">${products.length}</span>
+      </div>`;
+      el.innerHTML += allCategories.map(c => {
+        const cnt = products.filter(p => p.categoryId === c.id).length;
+        return `<div class="sidebar__cat-item ${currentCat===c.id?'active':''}" onclick="setCat('${c.id}')">
+          <span>${c.icon} ${c.name}</span>
+          <span class="sidebar__cat-count">${cnt}</span>
+        </div>`;
+      }).join('');
+    }
+
+    // ── Render Product Card ────────────────────────────────────
+    function renderProductCard(p) {
+      const cat = allCategories.find(c => c.id === p.categoryId);
+      const catName = cat ? cat.name : '';
+      const badge = p.stock===0 ? '<span class="product-card__badge badge-out">Hết hàng</span>'
+                  : p.sold===0  ? '<span class="product-card__badge badge-new">Mới</span>'
+                  : p.sold>=30  ? '<span class="product-card__badge badge-hot">Hot 🔥</span>'
+                  : '';
+      return `
+        <div class="product-card">
+          <div class="product-card__image">
+            <a href="product-detail.html?id=${p.id}">
+              <img src="${p.images[0]}" alt="${p.name}" loading="lazy" />
+            </a>
+            ${badge}
+          </div>
+          <div class="product-card__body">
+            <div class="product-card__cat">${catName}</div>
+            <div class="product-card__name"><a href="product-detail.html?id=${p.id}">${p.name}</a></div>
+            <div class="product-card__rating">
+              <div class="stars">${renderStars(p.rating)}</div>
+              <span class="rating-count">${p.reviewCount>0?`(${p.reviewCount})`:''}</span>
+            </div>
+            <div class="product-card__footer">
+              <div class="product-card__price">${Store.formatPrice(p.price)}</div>
+              <div class="product-card__stock">${p.stock>0?`Còn ${p.stock}`:'Hết hàng'}</div>
+            </div>
+          </div>
+          <div class="product-card__actions">
+            <button class="btn btn-primary btn-sm" onclick="addToCart('${p.id}', ${p.stock})" ${p.stock===0?'disabled':''}>
+              <i class="fas fa-cart-plus"></i> Thêm giỏ
+            </button>
+            <a href="product-detail.html?id=${p.id}" class="btn btn-outline btn-sm">Xem</a>
+          </div>
+        </div>`;
+    }
+
+    // ── Render Products ────────────────────────────────────────
+    async function renderProducts() {
+      const params = {
+        cat: currentCat,
+        q: currentSearch,
+        minPrice: priceMin > 0 ? priceMin : null,
+        maxPrice: priceMax < 999999999 ? priceMax : null,
+        sort: currentSort,
+      };
+
+      const all = await Store.getProducts(params);
+      const total = all.length;
+      const totalPages = Math.ceil(total / PAGE_SIZE);
+      if (currentPage > totalPages) currentPage = 1;
+      const paged = all.slice((currentPage-1)*PAGE_SIZE, currentPage*PAGE_SIZE);
+
+      document.getElementById('result-count').textContent = `${total} sản phẩm`;
+      const grid = document.getElementById('products-grid');
+      const empty = document.getElementById('empty-state');
+
+      if (paged.length === 0) {
+        grid.innerHTML = '';
+        grid.className = '';
+        empty.classList.remove('hidden');
+      } else {
+        empty.classList.add('hidden');
+        grid.className = currentView === 'grid' ? 'grid-3' : '';
+        if (currentView === 'list') {
+          grid.style.display = 'flex';
+          grid.style.flexDirection = 'column';
+          grid.style.gap = '16px';
+        } else {
+          grid.style.display = '';
+          grid.style.flexDirection = '';
+          grid.style.gap = '';
+        }
+        grid.innerHTML = paged.map(renderProductCard).join('');
+      }
+
+      renderPagination(totalPages);
+      renderActiveFilters();
+    }
+
+    // ── Pagination ────────────────────────────────────────────
+    function renderPagination(totalPages) {
+      const el = document.getElementById('pagination');
+      if (totalPages <= 1) { el.innerHTML = ''; return; }
+      let html = `<button onclick="goPage(${currentPage-1})" ${currentPage===1?'disabled':''}>
+        <i class="fas fa-chevron-left"></i></button>`;
+      for (let i = 1; i <= totalPages; i++) {
+        html += `<button class="${i===currentPage?'active':''}" onclick="goPage(${i})">${i}</button>`;
+      }
+      html += `<button onclick="goPage(${currentPage+1})" ${currentPage===totalPages?'disabled':''}>
+        <i class="fas fa-chevron-right"></i></button>`;
+      el.innerHTML = html;
+    }
+
+    // ── Active Filter Tags ────────────────────────────────────
+    function renderActiveFilters() {
+      const el = document.getElementById('active-filters');
+      let tags = [];
+      if (currentCat) {
+        const cat = allCategories.find(c => c.id === currentCat);
+        if (cat) tags.push(`<span style="display:inline-flex;align-items:center;gap:6px;padding:4px 12px;background:var(--primary-light);border-radius:var(--radius-full);font-size:.8rem;color:var(--accent);">
+          ${cat.icon} ${cat.name}
+          <button onclick="setCat(null)" style="color:var(--accent);font-size:.9rem;">×</button></span>`);
+      }
+      if (currentSearch) tags.push(`<span style="display:inline-flex;align-items:center;gap:6px;padding:4px 12px;background:var(--primary-light);border-radius:var(--radius-full);font-size:.8rem;color:var(--accent);">
+        🔍 "${currentSearch}"
+        <button onclick="clearSearch()" style="color:var(--accent);font-size:.9rem;">×</button></span>`);
+      el.innerHTML = tags.join('');
+    }
+
+    // ── Actions ────────────────────────────────────────────────
+    async function setCat(catId) {
+      currentCat = catId; currentPage = 1;
+      renderCatChips();
+      await renderSidebarCats();
+      await renderProducts();
+    }
+    async function setSort(s) { currentSort = s; currentPage = 1; await renderProducts(); }
+    function setView(v) {
+      currentView = v;
+      document.getElementById('view-grid').classList.toggle('active', v==='grid');
+      document.getElementById('view-list').classList.toggle('active', v==='list');
+      renderProducts();
+    }
+    async function goPage(p) { currentPage = p; await renderProducts(); window.scrollTo({top:320,behavior:'smooth'}); }
+    async function applyPriceFilter() {
+      priceMin = parseInt(document.getElementById('price-min').value)||0;
+      priceMax = parseInt(document.getElementById('price-max').value)||999999999;
+      currentPage = 1; await renderProducts();
+    }
+    async function resetFilters() {
+      currentCat=null; currentSort='default'; currentSearch=''; priceMin=0; priceMax=999999999;
+      document.getElementById('search-input').value='';
+      document.getElementById('price-min').value=0;
+      document.getElementById('price-max').value=500000;
+      currentPage=1; renderCatChips(); await renderSidebarCats(); await renderProducts();
+    }
+    async function clearSearch() { currentSearch=''; document.getElementById('search-input').value=''; currentPage=1; await renderProducts(); }
+
+    // ── Search ────────────────────────────────────────────────
+    document.getElementById('search-btn').addEventListener('click', async () => {
+      currentSearch = document.getElementById('search-input').value.trim();
+      currentPage = 1; await renderProducts();
+    });
+    document.getElementById('search-input').addEventListener('keydown', e => {
+      if (e.key === 'Enter') document.getElementById('search-btn').click();
+    });
+    if (currentSearch) document.getElementById('search-input').value = currentSearch;
+
+    // ── Add to cart ───────────────────────────────────────────
+    function addToCart(productId, stock) {
+      const res = Store.addToCart(productId, 1, stock);
+      if (res.success) { showToast('Đã thêm vào giỏ hàng! 🛍️'); updateCartBadge(); }
+      else showToast(res.message, 'error');
+    }
+
+    // ── Auth UI ──────────────────────────────────────────────
+    function renderUserNav() {
+      const user  = Store.getCurrentUser();
+      const admin = Store.getCurrentAdmin();
+      const navEl = document.getElementById('user-nav-action');
+      const mobEl = document.getElementById('mobile-user-action');
+
+      if (!navEl) return;
+
+      if (admin) {
+        navEl.innerHTML = `
+          <div style="display:flex;align-items:center;gap:8px;">
+            <a href="admin/index.html" class="btn btn-primary btn-sm" style="background:var(--accent-dark);color:#fff;">
+              <i class="fas fa-cog"></i> Trang Quản Trị
+            </a>
+            <button class="btn btn-ghost btn-sm" onclick="handleAdminLogout()" title="Đăng xuất Admin">
+              <i class="fas fa-sign-out-alt"></i>
+            </button>
+          </div>`;
+        if (mobEl) mobEl.innerHTML = `<a href="admin/index.html" class="btn btn-primary btn-sm btn-full"><i class="fas fa-cog"></i> Trang Quản Trị Admin</a>`;
+      } else if (user) {
+        navEl.innerHTML = `
+          <div style="display:flex;align-items:center;gap:8px;position:relative;">
+            <div style="width:32px;height:32px;border-radius:50%;background:var(--accent);color:#fff;display:flex;align-items:center;justify-content:center;font-weight:700;font-size:.85rem;">
+              ${user.name.charAt(0).toUpperCase()}
+            </div>
+            <span style="font-size:.88rem;font-weight:600;color:var(--text-dark);">${user.name.split(' ').pop()}</span>
+            <button class="btn btn-ghost btn-sm" onclick="handleCustomerLogout()" title="Đăng xuất" style="padding:4px 8px;">
+              <i class="fas fa-sign-out-alt"></i>
+            </button>
+          </div>`;
+        if (mobEl) mobEl.innerHTML = `<span style="font-size:.88rem;font-weight:600;">👋 Xin chào, ${user.name}</span> <button class="btn btn-ghost btn-sm" onclick="handleCustomerLogout()">Đăng xuất</button>`;
+      } else {
+        navEl.innerHTML = `
+          <button class="btn btn-outline btn-sm" onclick="openAuthModal()">
+            <i class="fas fa-user"></i> Đăng nhập
+          </button>`;
+        if (mobEl) mobEl.innerHTML = `<button class="btn btn-primary btn-sm btn-full" onclick="openAuthModal()"><i class="fas fa-user"></i> Đăng nhập / Đăng ký</button>`;
+      }
+    }
+
+    function openAuthModal() {
+      document.getElementById('auth-modal').style.display = 'flex';
+    }
+
+    function closeAuthModal() {
+      document.getElementById('auth-modal').style.display = 'none';
+    }
+
+    function switchAuthTab(tab) {
+      const custTab = document.getElementById('auth-tab-customer');
+      const adminTab = document.getElementById('auth-tab-admin');
+      const regTab  = document.getElementById('auth-tab-register');
+      
+      const custForm = document.getElementById('auth-form-customer');
+      const adminForm = document.getElementById('auth-form-admin');
+      const regForm  = document.getElementById('auth-form-register');
+
+      [custTab, adminTab, regTab].forEach(t => { if(t){t.style.color = 'var(--text-light)'; t.style.borderBottom = 'none';} });
+      [custForm, adminForm, regForm].forEach(f => { if(f) f.style.display = 'none'; });
+
+      if (tab === 'customer') {
+        custTab.style.color = 'var(--accent)'; custTab.style.borderBottom = '2px solid var(--accent)';
+        custForm.style.display = 'block';
+      } else if (tab === 'admin') {
+        adminTab.style.color = 'var(--accent)'; adminTab.style.borderBottom = '2px solid var(--accent)';
+        adminForm.style.display = 'block';
+      } else {
+        regTab.style.color = 'var(--accent)'; regTab.style.borderBottom = '2px solid var(--accent)';
+        regForm.style.display = 'block';
+      }
+    }
+
+    async function handleCustomerLogin(e) {
+      e.preventDefault();
+      const email = document.getElementById('login-email').value;
+      const pass  = document.getElementById('login-pass').value;
+      const res   = await Store.loginCustomer(email, pass);
+      if (res.success) {
+        showToast(`Xin chào ${res.user.name}! 💕`);
+        closeAuthModal();
+        renderUserNav();
+      } else {
+        showToast(res.message, 'error');
+      }
+    }
+
+    async function handleAdminLoginModal(e) {
+      e.preventDefault();
+      const user = document.getElementById('admin-login-user').value;
+      const pass = document.getElementById('admin-login-pass').value;
+      const res  = await Store.loginAdmin(user, pass);
+      if (res.success) {
+        showToast('Đăng nhập Admin thành công!');
+        closeAuthModal();
+        renderUserNav();
+        setTimeout(() => { window.location.href = 'admin/index.html'; }, 600);
+      } else {
+        showToast(res.message, 'error');
+      }
+    }
+
+    async function handleCustomerRegister(e) {
+      e.preventDefault();
+      const userData = {
+        name:     document.getElementById('reg-name').value,
+        email:    document.getElementById('reg-email').value,
+        password: document.getElementById('reg-pass').value,
+        phone:    document.getElementById('reg-phone').value,
+      };
+      const res = await Store.registerCustomer(userData);
+      if (res.success) {
+        showToast('Đăng ký tài khoản thành công! 🎉');
+        closeAuthModal();
+        renderUserNav();
+      } else {
+        showToast(res.message, 'error');
+      }
+    }
+
+    function handleCustomerLogout() {
+      Store.logoutCustomer();
+      showToast('Đã đăng xuất tài khoản');
+      renderUserNav();
+    }
+
+    function handleAdminLogout() {
+      Store.logoutAdmin();
+      showToast('Đã đăng xuất khỏi tài khoản Admin');
+      renderUserNav();
+    }
+
+    // ── Init ──────────────────────────────────────────────────
+    async function initPage() {
+      await Store.init();
+      renderUserNav();
+      updateCartBadge();
+      allCategories = await Store.getCategories();
+      renderCatChips();
+      await renderSidebarCats();
+      await renderProducts();
+    }
+
+    initPage();
+  </script>
+</body>
+</html>

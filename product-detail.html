@@ -1,0 +1,670 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Chi tiết sản phẩm – Handmade Corner</title>
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🧶</text></svg>" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,600;0,700;1,400&family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" />
+  <link rel="stylesheet" href="css/style.css" />
+  <link rel="stylesheet" href="css/components.css" />
+</head>
+<body>
+  <!-- NAVBAR -->
+  <nav class="navbar" id="navbar">
+    <div class="navbar__inner">
+      <a href="index.html" class="navbar__logo"><span>🧶</span> Handmade Corner</a>
+      <div class="navbar__nav">
+        <a href="index.html">Trang chủ</a>
+        <a href="products.html" class="active">Sản phẩm</a>
+        <a href="orders.html">Đơn hàng</a>
+      </div>
+      <div class="navbar__actions">
+        <a href="cart.html" class="navbar__cart" id="nav-cart">
+          <i class="fas fa-shopping-bag"></i>
+          <span class="cart-badge" id="cart-badge" style="display:none">0</span>
+        </a>
+        <div id="user-nav-action">
+          <button class="btn btn-outline btn-sm" onclick="openAuthModal()">
+            <i class="fas fa-user"></i> Đăng nhập
+          </button>
+        </div>
+        <button class="hamburger" id="hamburger"><span></span><span></span><span></span></button>
+      </div>
+    </div>
+  </nav>
+  <div class="mobile-nav" id="mobile-nav">
+    <a href="index.html">🏠 Trang chủ</a>
+    <a href="products.html">🛍️ Sản phẩm</a>
+    <a href="orders.html">📦 Đơn hàng</a>
+    <a href="cart.html">🛒 Giỏ hàng</a>
+    <div id="mobile-user-action" style="padding:12px 16px;"></div>
+  </div>
+
+  <!-- PRODUCT DETAIL -->
+  <div class="container section" id="detail-container">
+    <!-- Loading state -->
+    <div id="loading-state" style="text-align:center;padding:80px 0;">
+      <div style="font-size:2rem;margin-bottom:12px;" class="animate-bounce">🧶</div>
+      <p style="color:var(--text-light);">Đang tải sản phẩm...</p>
+    </div>
+    <!-- Content rendered by JS -->
+    <div id="product-content" style="display:none;"></div>
+  </div>
+
+  <!-- RELATED PRODUCTS -->
+  <section class="section" style="background:var(--bg-section);" id="related-section" style="display:none">
+    <div class="container">
+      <div class="section-header">
+        <div class="section-header__tag">✨ Có thể bạn thích</div>
+        <h2 class="section-header__title">Sản phẩm <em>Liên quan</em></h2>
+      </div>
+      <div class="grid-4" id="related-grid"></div>
+    </div>
+  </section>
+
+  <!-- REVIEW SECTION -->
+  <section class="section" id="reviews-section">
+    <div class="container" style="max-width:800px;">
+      <h2 style="font-family:var(--font-heading);margin-bottom:8px;">Đánh giá sản phẩm</h2>
+      <div id="rating-summary" style="display:flex;align-items:center;gap:32px;padding:24px;background:var(--bg-section);border-radius:var(--radius);margin-bottom:32px;flex-wrap:wrap;gap:24px;">
+        <!-- Rendered by JS -->
+      </div>
+      <div id="reviews-list">
+        <!-- Rendered by JS -->
+      </div>
+      <div id="review-form-section" style="display:none;margin-top:32px;">
+        <h3 style="font-family:var(--font-heading);margin-bottom:20px;">Viết đánh giá của bạn</h3>
+        <div class="card"><div class="card-body">
+          <div class="form-group">
+            <label class="form-label">Mã đơn hàng <span class="required">*</span></label>
+            <input type="text" id="review-order-id" class="form-control" placeholder="VD: ORD-1234567890" />
+          </div>
+          <div class="form-group">
+            <label class="form-label">Tên của bạn <span class="required">*</span></label>
+            <input type="text" id="review-name" class="form-control" placeholder="Tên hiển thị..." />
+          </div>
+          <div class="form-group">
+            <label class="form-label">Đánh giá sao <span class="required">*</span></label>
+            <div class="star-rating" id="star-input">
+              <span class="star" data-val="1">★</span>
+              <span class="star" data-val="2">★</span>
+              <span class="star" data-val="3">★</span>
+              <span class="star" data-val="4">★</span>
+              <span class="star" data-val="5">★</span>
+            </div>
+            <div id="star-label" style="font-size:.82rem;color:var(--text-light);margin-top:6px;">Chưa chọn</div>
+          </div>
+          <div class="form-group">
+            <label class="form-label">Nhận xét</label>
+            <textarea id="review-comment" class="form-control" placeholder="Chia sẻ cảm nhận của bạn về sản phẩm..." rows="4"></textarea>
+          </div>
+          <button class="btn btn-primary" onclick="submitReview()">
+            <i class="fas fa-paper-plane"></i> Gửi đánh giá
+          </button>
+        </div></div>
+      </div>
+      <div style="margin-top:24px;">
+        <button class="btn btn-outline" onclick="document.getElementById('review-form-section').style.display='block';this.style.display='none';" id="toggle-review-form">
+          <i class="fas fa-pen"></i> Viết đánh giá
+        </button>
+      </div>
+    </div>
+  </section>
+
+  <!-- FOOTER -->
+  <!-- AUTH MODAL (UNIFIED LOGINS) -->
+  <div id="auth-modal" class="modal-overlay" style="display:none;">
+    <div class="modal" style="max-width:460px;">
+      <div class="modal__header">
+        <div style="display:flex;gap:12px;">
+          <h3 id="auth-tab-customer" onclick="switchAuthTab('customer')" style="cursor:pointer;color:var(--accent);border-bottom:2px solid var(--accent);padding-bottom:4px;font-size:1rem;">Khách hàng</h3>
+          <h3 id="auth-tab-admin" onclick="switchAuthTab('admin')" style="cursor:pointer;color:var(--text-light);padding-bottom:4px;font-size:1rem;">Quản trị viên</h3>
+          <h3 id="auth-tab-register" onclick="switchAuthTab('register')" style="cursor:pointer;color:var(--text-light);padding-bottom:4px;font-size:1rem;">Đăng ký</h3>
+        </div>
+        <button class="modal__close" onclick="closeAuthModal()">×</button>
+      </div>
+      <div class="modal__body">
+        <!-- CUSTOMER LOGIN FORM -->
+        <form id="auth-form-customer" onsubmit="handleCustomerLogin(event)">
+          <div class="form-group">
+            <label class="form-label">Email khách hàng <span class="required">*</span></label>
+            <input type="email" id="login-email" class="form-control" placeholder="khach@gmail.com" required />
+          </div>
+          <div class="form-group">
+            <label class="form-label">Mật khẩu <span class="required">*</span></label>
+            <input type="password" id="login-pass" class="form-control" placeholder="Mật khẩu..." required />
+          </div>
+          <div style="font-size:.78rem;color:var(--text-light);margin-bottom:16px;">Tài khoản mẫu: <strong>khach@gmail.com</strong> / <strong>123456</strong></div>
+          <button type="submit" class="btn btn-primary btn-full btn-lg" id="c-login-btn">
+            <i class="fas fa-sign-in-alt"></i> Đăng nhập Khách hàng
+          </button>
+        </form>
+
+        <!-- ADMIN LOGIN FORM -->
+        <form id="auth-form-admin" onsubmit="handleAdminLoginModal(event)" style="display:none;">
+          <div class="form-group">
+            <label class="form-label">Tên đăng nhập Admin <span class="required">*</span></label>
+            <input type="text" id="admin-login-user" class="form-control" placeholder="admin" required value="admin" />
+          </div>
+          <div class="form-group">
+            <label class="form-label">Mật khẩu Admin <span class="required">*</span></label>
+            <input type="password" id="admin-login-pass" class="form-control" placeholder="admin123" required value="admin123" />
+          </div>
+          <div style="font-size:.78rem;color:var(--text-light);margin-bottom:16px;">Tài khoản mặc định: <strong>admin</strong> / <strong>admin123</strong></div>
+          <button type="submit" class="btn btn-primary btn-full btn-lg" id="a-login-btn">
+            <i class="fas fa-user-shield"></i> Đăng nhập Quản trị viên
+          </button>
+        </form>
+
+        <!-- REGISTER FORM -->
+        <form id="auth-form-register" onsubmit="handleCustomerRegister(event)" style="display:none;">
+          <div class="form-group">
+            <label class="form-label">Họ và tên <span class="required">*</span></label>
+            <input type="text" id="reg-name" class="form-control" placeholder="Nguyễn Văn A" required />
+          </div>
+          <div class="form-group">
+            <label class="form-label">Email <span class="required">*</span></label>
+            <input type="email" id="reg-email" class="form-control" placeholder="email@example.com" required />
+          </div>
+          <div class="form-group">
+            <label class="form-label">Mật khẩu <span class="required">*</span></label>
+            <input type="password" id="reg-pass" class="form-control" placeholder="Tối thiểu 6 ký tự" required minlength="6" />
+          </div>
+          <div class="form-group">
+            <label class="form-label">Số điện thoại</label>
+            <input type="tel" id="reg-phone" class="form-control" placeholder="0901234567" />
+          </div>
+          <button type="submit" class="btn btn-primary btn-full btn-lg" id="c-reg-btn">
+            <i class="fas fa-user-plus"></i> Tạo tài khoản
+          </button>
+        </form>
+      </div>
+    </div>
+  </div>
+
+  <footer class="footer">
+    <div class="container">
+      <div style="display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:20px;">
+        <div class="footer__logo"><span>🧶</span> Handmade Corner</div>
+        <div style="display:flex;gap:20px;">
+          <a href="index.html" style="color:rgba(255,255,255,.6);font-size:.88rem;">Trang chủ</a>
+          <a href="products.html" style="color:rgba(255,255,255,.6);font-size:.88rem;">Sản phẩm</a>
+          <a href="cart.html" style="color:rgba(255,255,255,.6);font-size:.88rem;">Giỏ hàng</a>
+        </div>
+      </div>
+    </div>
+    <div class="footer__bottom"><div class="container">© 2026 Handmade Corner. Made with 💕</div></div>
+  </footer>
+
+  <div id="toast-container"></div>
+
+  <script src="js/store.js"></script>
+  <script>
+    const productId = new URLSearchParams(window.location.search).get('id');
+    let currentProduct = null;
+    let selectedRating = 0;
+    let qty = 1;
+
+    // Navbar
+    window.addEventListener('scroll', () =>
+      document.getElementById('navbar').classList.toggle('scrolled', window.scrollY > 20));
+    document.getElementById('hamburger').addEventListener('click', () => {
+      document.getElementById('hamburger').classList.toggle('open');
+      document.getElementById('mobile-nav').classList.toggle('open');
+    });
+    function updateCartBadge() {
+      const n = Store.getCartCount(), b = document.getElementById('cart-badge');
+      b.textContent = n; b.style.display = n > 0 ? 'flex' : 'none';
+    }
+
+    function showToast(msg, type = 'success') {
+      const tc = document.getElementById('toast-container');
+      const t = document.createElement('div');
+      t.className = `toast ${type}`;
+      t.innerHTML = `<i class="fas fa-${type==='success'?'check-circle':'times-circle'}"></i> ${msg}`;
+      tc.appendChild(t);
+      setTimeout(() => t.remove(), 3200);
+    }
+
+    function renderStars(rating, size = '1rem') {
+      if (!rating) return '<span style="color:var(--text-light);font-size:.82rem;">Chưa có đánh giá</span>';
+      let s = '';
+      for (let i = 1; i <= 5; i++)
+        s += `<i class="${i<=Math.round(rating)?'fas':'far'} fa-star" style="color:#F59E0B;font-size:${size};"></i>`;
+      return s;
+    }
+
+    // ── Render Product ─────────────────────────────────────────
+    async function renderProduct() {
+      try {
+        currentProduct = await Store.getProduct(productId);
+      } catch (e) {
+        currentProduct = null;
+      }
+
+      if (!currentProduct) {
+        document.getElementById('loading-state').innerHTML = `
+          <div class="empty-state">
+            <div class="empty-state__icon">😢</div>
+            <div class="empty-state__title">Không tìm thấy sản phẩm</div>
+            <a href="products.html" class="btn btn-primary mt-16">Quay lại</a>
+          </div>`;
+        return;
+      }
+
+      const p = currentProduct;
+      document.title = `${p.name} – Handmade Corner`;
+      const categories = await Store.getCategories();
+      const cat = categories.find(c => c.id === p.categoryId);
+
+      document.getElementById('loading-state').style.display = 'none';
+      const content = document.getElementById('product-content');
+      content.style.display = 'block';
+
+      const stockStatus = p.stock === 0
+        ? '<span class="product-info__stock out"><i class="fas fa-times-circle"></i> Hết hàng</span>'
+        : p.stock < 5
+        ? `<span class="product-info__stock low"><i class="fas fa-exclamation-triangle"></i> Chỉ còn ${p.stock} sản phẩm!</span>`
+        : `<span class="product-info__stock"><i class="fas fa-check-circle" style="color:var(--success);"></i> Còn ${p.stock} sản phẩm</span>`;
+
+      const thumbs = p.images.length > 1
+        ? `<div class="product-gallery__thumbs">${p.images.map((img, i) =>
+            `<div class="product-gallery__thumb ${i===0?'active':''}" onclick="changeImage('${img}',this)">
+              <img src="${img}" alt="Ảnh ${i+1}" loading="lazy"/>
+            </div>`).join('')}</div>`
+        : '';
+
+      content.innerHTML = `
+        <div class="breadcrumb">
+          <a href="index.html">Trang chủ</a>
+          <span><i class="fas fa-chevron-right" style="font-size:.7rem;"></i></span>
+          <a href="products.html">Sản phẩm</a>
+          <span><i class="fas fa-chevron-right" style="font-size:.7rem;"></i></span>
+          <a href="products.html?cat=${p.categoryId}">${cat?cat.name:''}</a>
+          <span><i class="fas fa-chevron-right" style="font-size:.7rem;"></i></span>
+          <span>${p.name}</span>
+        </div>
+
+        <div class="product-detail" style="margin-top:24px;">
+          <!-- Gallery -->
+          <div class="product-gallery">
+            <div class="product-gallery__main">
+              <img src="${p.images[0]}" alt="${p.name}" id="main-img" />
+            </div>
+            ${thumbs}
+          </div>
+
+          <!-- Info -->
+          <div class="product-info">
+            <div class="product-info__cat">
+              <a href="products.html?cat=${p.categoryId}" class="category-chip">${cat?cat.icon:''} ${cat?cat.name:''}</a>
+            </div>
+            <h1 class="product-info__title">${p.name}</h1>
+            <div class="product-info__rating">
+              <div class="stars">${renderStars(p.rating,'1rem')}</div>
+              <span style="font-size:.88rem;color:var(--text-medium);">${p.reviewCount > 0 ? `${p.rating} (${p.reviewCount} đánh giá)` : 'Chưa có đánh giá'}</span>
+              <span style="color:var(--border);margin:0 4px;">|</span>
+              <span style="font-size:.88rem;color:var(--text-light);">Đã bán: ${p.sold}</span>
+            </div>
+            <div class="product-info__price">${Store.formatPrice(p.price)}</div>
+            ${stockStatus}
+
+            <div class="product-info__desc">${p.description}</div>
+
+            <div class="product-info__tags">
+              ${(p.tags||[]).map(t => `<span class="product-info__tag">#${t}</span>`).join('')}
+            </div>
+
+            ${p.stock > 0 ? `
+            <div class="product-info__qty">
+              <span style="font-size:.88rem;font-weight:600;">Số lượng:</span>
+              <div class="qty-selector">
+                <button onclick="changeQty(-1)"><i class="fas fa-minus"></i></button>
+                <input type="number" id="qty-input" value="1" min="1" max="${p.stock}" readonly />
+                <button onclick="changeQty(1)"><i class="fas fa-plus"></i></button>
+              </div>
+              <span style="font-size:.82rem;color:var(--text-light);">(Tối đa ${p.stock})</span>
+            </div>
+            <div class="product-info__actions">
+              <button class="btn btn-primary btn-lg" onclick="addToCart()">
+                <i class="fas fa-cart-plus"></i> Thêm vào giỏ
+              </button>
+              <a href="cart.html" class="btn btn-outline btn-lg" onclick="addToCartAndGo()">
+                Mua ngay
+              </a>
+            </div>` : `
+            <div class="product-info__actions">
+              <button class="btn btn-primary btn-lg" disabled>Hết hàng</button>
+            </div>`}
+
+            <!-- Trust badges -->
+            <div style="display:flex;gap:20px;flex-wrap:wrap;padding:20px;background:var(--bg-section);border-radius:var(--radius);margin-top:8px;">
+              <div style="display:flex;align-items:center;gap:8px;font-size:.82rem;color:var(--text-medium);">
+                <span style="font-size:1.1rem;">✂️</span> Handmade 100%
+              </div>
+              <div style="display:flex;align-items:center;gap:8px;font-size:.82rem;color:var(--text-medium);">
+                <span style="font-size:1.1rem;">📦</span> Đóng gói cẩn thận
+              </div>
+              <div style="display:flex;align-items:center;gap:8px;font-size:.82rem;color:var(--text-medium);">
+                <span style="font-size:1.1rem;">🔄</span> Đổi trả 7 ngày
+              </div>
+              <div style="display:flex;align-items:center;gap:8px;font-size:.82rem;color:var(--text-medium);">
+                <span style="font-size:1.1rem;">💝</span> Gói quà miễn phí
+              </div>
+            </div>
+          </div>
+        </div>`;
+
+      await renderRelated(p);
+      await renderReviews(p);
+    }
+
+    // ── Gallery ────────────────────────────────────────────────
+    function changeImage(src, thumb) {
+      document.getElementById('main-img').src = src;
+      document.querySelectorAll('.product-gallery__thumb').forEach(t => t.classList.remove('active'));
+      thumb.classList.add('active');
+    }
+
+    // ── Qty ────────────────────────────────────────────────────
+    function changeQty(delta) {
+      if (!currentProduct) return;
+      const input = document.getElementById('qty-input');
+      qty = Math.max(1, Math.min(currentProduct.stock, qty + delta));
+      input.value = qty;
+    }
+
+    // ── Add to cart ───────────────────────────────────────────
+    function addToCart() {
+      if (!currentProduct) return;
+      const res = Store.addToCart(productId, qty, currentProduct.stock);
+      if (res.success) { showToast('Đã thêm vào giỏ hàng! 🛍️'); updateCartBadge(); }
+      else showToast(res.message, 'error');
+    }
+
+    function addToCartAndGo() {
+      event.preventDefault();
+      if (!currentProduct) return;
+      const res = Store.addToCart(productId, qty, currentProduct.stock);
+      if (res.success) { updateCartBadge(); window.location.href='cart.html'; }
+      else showToast(res.message, 'error');
+    }
+
+    // ── Related Products ───────────────────────────────────────
+    async function renderRelated(product) {
+      const allProducts = await Store.getProducts({ cat: product.categoryId });
+      const related = allProducts.filter(p => p.id !== product.id).slice(0, 4);
+      if (related.length === 0) return;
+      document.getElementById('related-section').style.display = 'block';
+      const categories = await Store.getCategories();
+
+      document.getElementById('related-grid').innerHTML = related.map(p => {
+        const cat = categories.find(c => c.id === p.categoryId);
+        return `
+          <div class="product-card">
+            <div class="product-card__image">
+              <a href="product-detail.html?id=${p.id}"><img src="${p.images[0]}" alt="${p.name}" loading="lazy" /></a>
+              ${p.stock===0?'<span class="product-card__badge badge-out">Hết hàng</span>':p.sold===0?'<span class="product-card__badge badge-new">Mới</span>':''}
+            </div>
+            <div class="product-card__body">
+              <div class="product-card__cat">${cat?cat.name:''}</div>
+              <div class="product-card__name"><a href="product-detail.html?id=${p.id}">${p.name}</a></div>
+              <div class="product-card__footer">
+                <div class="product-card__price">${Store.formatPrice(p.price)}</div>
+                <div class="product-card__stock">${p.stock>0?`Còn ${p.stock}`:'Hết'}</div>
+              </div>
+            </div>
+            <div class="product-card__actions">
+              <button class="btn btn-primary btn-sm" onclick="Store.addToCart('${p.id}',1,${p.stock});updateCartBadge();showToast('Đã thêm! 🛍️')" ${p.stock===0?'disabled':''}>
+                <i class="fas fa-cart-plus"></i> Thêm giỏ
+              </button>
+            </div>
+          </div>`;
+      }).join('');
+    }
+
+    // ── Reviews ────────────────────────────────────────────────
+    async function renderReviews(p) {
+      const reviews = await Store.getReviews(p.id);
+      const summary = document.getElementById('rating-summary');
+      const list    = document.getElementById('reviews-list');
+
+      if (reviews.length === 0) {
+        summary.innerHTML = `<p style="color:var(--text-light);">Chưa có đánh giá nào. Hãy là người đầu tiên đánh giá!</p>`;
+        list.innerHTML = '';
+        return;
+      }
+
+      const avg = reviews.reduce((s,r) => s+r.rating, 0) / reviews.length;
+      const distribution = [5,4,3,2,1].map(star => ({
+        star, count: reviews.filter(r => r.rating === star).length
+      }));
+
+      summary.innerHTML = `
+        <div style="text-align:center;">
+          <div style="font-size:3.5rem;font-weight:800;color:var(--accent);line-height:1;">${avg.toFixed(1)}</div>
+          <div style="font-size:1.2rem;margin:8px 0;">${renderStars(avg,'1.2rem')}</div>
+          <div style="font-size:.82rem;color:var(--text-light);">${reviews.length} đánh giá</div>
+        </div>
+        <div style="flex:1;">
+          ${distribution.map(d => `
+            <div style="display:flex;align-items:center;gap:10px;margin-bottom:6px;">
+              <span style="font-size:.82rem;color:var(--text-medium);white-space:nowrap;">${d.star} ⭐</span>
+              <div class="progress-bar" style="flex:1;">
+                <div class="progress-bar__fill" style="width:${reviews.length?d.count/reviews.length*100:0}%"></div>
+              </div>
+              <span style="font-size:.78rem;color:var(--text-light);width:24px;text-align:right;">${d.count}</span>
+            </div>`).join('')}
+        </div>`;
+
+      list.innerHTML = reviews.map(r => `
+        <div class="review-card">
+          <div class="review-card__header">
+            <div style="display:flex;align-items:center;gap:10px;">
+              <div style="width:38px;height:38px;border-radius:50%;background:var(--primary-light);display:flex;align-items:center;justify-content:center;font-weight:700;color:var(--accent);font-size:.95rem;">${r.customerName.charAt(0)}</div>
+              <div>
+                <div class="review-card__author">${r.customerName}</div>
+                <div style="font-size:.82rem;">${renderStars(r.rating,'0.85rem')}</div>
+              </div>
+            </div>
+            <div class="review-card__date">${Store.formatDate(r.createdAt)}</div>
+          </div>
+          <p class="review-card__comment">${r.comment}</p>
+        </div>`).join('');
+    }
+
+    // ── Star Input ─────────────────────────────────────────────
+    const starLabels = ['','Rất tệ','Tệ','Bình thường','Tốt','Tuyệt vời'];
+    document.querySelectorAll('#star-input .star').forEach(star => {
+      star.addEventListener('click', () => {
+        selectedRating = parseInt(star.dataset.val);
+        document.querySelectorAll('#star-input .star').forEach((s,i) => {
+          s.classList.toggle('filled', i < selectedRating);
+        });
+        document.getElementById('star-label').textContent = starLabels[selectedRating];
+      });
+      star.addEventListener('mouseenter', () => {
+        const val = parseInt(star.dataset.val);
+        document.querySelectorAll('#star-input .star').forEach((s,i) => s.classList.toggle('hover', i < val));
+      });
+      star.addEventListener('mouseleave', () => {
+        document.querySelectorAll('#star-input .star').forEach(s => s.classList.remove('hover'));
+      });
+    });
+
+    // ── Submit Review ──────────────────────────────────────────
+    async function submitReview() {
+      const orderId = document.getElementById('review-order-id').value.trim();
+      const name    = document.getElementById('review-name').value.trim();
+      const comment = document.getElementById('review-comment').value.trim();
+      if (!orderId) return showToast('Nhập mã đơn hàng!', 'error');
+      if (!name)    return showToast('Nhập tên của bạn!', 'error');
+      if (!selectedRating) return showToast('Chọn số sao đánh giá!', 'error');
+      if (!comment) return showToast('Nhập nhận xét!', 'error');
+
+      const res = await Store.addReview(productId, orderId, name, selectedRating, comment);
+      if (res.success) {
+        showToast('Đã gửi đánh giá! Cảm ơn bạn 💕');
+        document.getElementById('review-form-section').style.display = 'none';
+        document.getElementById('toggle-review-form').style.display = 'inline-flex';
+        await renderProduct();
+      } else {
+        showToast(res.message || 'Chỉ đánh giá được sau khi đơn hoàn thành!', 'error');
+      }
+    }
+
+    // ── Auth UI ──────────────────────────────────────────────
+    function renderUserNav() {
+      const user  = Store.getCurrentUser();
+      const admin = Store.getCurrentAdmin();
+      const navEl = document.getElementById('user-nav-action');
+      const mobEl = document.getElementById('mobile-user-action');
+
+      if (!navEl) return;
+
+      if (admin) {
+        navEl.innerHTML = `
+          <div style="display:flex;align-items:center;gap:8px;">
+            <a href="admin/index.html" class="btn btn-primary btn-sm" style="background:var(--accent-dark);color:#fff;">
+              <i class="fas fa-cog"></i> Trang Quản Trị
+            </a>
+            <button class="btn btn-ghost btn-sm" onclick="handleAdminLogout()" title="Đăng xuất Admin">
+              <i class="fas fa-sign-out-alt"></i>
+            </button>
+          </div>`;
+        if (mobEl) mobEl.innerHTML = `<a href="admin/index.html" class="btn btn-primary btn-sm btn-full"><i class="fas fa-cog"></i> Trang Quản Trị Admin</a>`;
+      } else if (user) {
+        navEl.innerHTML = `
+          <div style="display:flex;align-items:center;gap:8px;position:relative;">
+            <div style="width:32px;height:32px;border-radius:50%;background:var(--accent);color:#fff;display:flex;align-items:center;justify-content:center;font-weight:700;font-size:.85rem;">
+              ${user.name.charAt(0).toUpperCase()}
+            </div>
+            <span style="font-size:.88rem;font-weight:600;color:var(--text-dark);">${user.name.split(' ').pop()}</span>
+            <button class="btn btn-ghost btn-sm" onclick="handleCustomerLogout()" title="Đăng xuất" style="padding:4px 8px;">
+              <i class="fas fa-sign-out-alt"></i>
+            </button>
+          </div>`;
+        if (mobEl) mobEl.innerHTML = `<span style="font-size:.88rem;font-weight:600;">👋 Xin chào, ${user.name}</span> <button class="btn btn-ghost btn-sm" onclick="handleCustomerLogout()">Đăng xuất</button>`;
+      } else {
+        navEl.innerHTML = `
+          <button class="btn btn-outline btn-sm" onclick="openAuthModal()">
+            <i class="fas fa-user"></i> Đăng nhập
+          </button>`;
+        if (mobEl) mobEl.innerHTML = `<button class="btn btn-primary btn-sm btn-full" onclick="openAuthModal()"><i class="fas fa-user"></i> Đăng nhập / Đăng ký</button>`;
+      }
+    }
+
+    function openAuthModal() {
+      document.getElementById('auth-modal').style.display = 'flex';
+    }
+
+    function closeAuthModal() {
+      document.getElementById('auth-modal').style.display = 'none';
+    }
+
+    function switchAuthTab(tab) {
+      const custTab = document.getElementById('auth-tab-customer');
+      const adminTab = document.getElementById('auth-tab-admin');
+      const regTab  = document.getElementById('auth-tab-register');
+      
+      const custForm = document.getElementById('auth-form-customer');
+      const adminForm = document.getElementById('auth-form-admin');
+      const regForm  = document.getElementById('auth-form-register');
+
+      [custTab, adminTab, regTab].forEach(t => { if(t){t.style.color = 'var(--text-light)'; t.style.borderBottom = 'none';} });
+      [custForm, adminForm, regForm].forEach(f => { if(f) f.style.display = 'none'; });
+
+      if (tab === 'customer') {
+        custTab.style.color = 'var(--accent)'; custTab.style.borderBottom = '2px solid var(--accent)';
+        custForm.style.display = 'block';
+      } else if (tab === 'admin') {
+        adminTab.style.color = 'var(--accent)'; adminTab.style.borderBottom = '2px solid var(--accent)';
+        adminForm.style.display = 'block';
+      } else {
+        regTab.style.color = 'var(--accent)'; regTab.style.borderBottom = '2px solid var(--accent)';
+        regForm.style.display = 'block';
+      }
+    }
+
+    async function handleCustomerLogin(e) {
+      e.preventDefault();
+      const email = document.getElementById('login-email').value;
+      const pass  = document.getElementById('login-pass').value;
+      const res   = await Store.loginCustomer(email, pass);
+      if (res.success) {
+        showToast(`Xin chào ${res.user.name}! 💕`);
+        closeAuthModal();
+        renderUserNav();
+      } else {
+        showToast(res.message, 'error');
+      }
+    }
+
+    async function handleAdminLoginModal(e) {
+      e.preventDefault();
+      const user = document.getElementById('admin-login-user').value;
+      const pass = document.getElementById('admin-login-pass').value;
+      const res  = await Store.loginAdmin(user, pass);
+      if (res.success) {
+        showToast('Đăng nhập Admin thành công!');
+        closeAuthModal();
+        renderUserNav();
+        setTimeout(() => { window.location.href = 'admin/index.html'; }, 600);
+      } else {
+        showToast(res.message, 'error');
+      }
+    }
+
+    async function handleCustomerRegister(e) {
+      e.preventDefault();
+      const userData = {
+        name:     document.getElementById('reg-name').value,
+        email:    document.getElementById('reg-email').value,
+        password: document.getElementById('reg-pass').value,
+        phone:    document.getElementById('reg-phone').value,
+      };
+      const res = await Store.registerCustomer(userData);
+      if (res.success) {
+        showToast('Đăng ký tài khoản thành công! 🎉');
+        closeAuthModal();
+        renderUserNav();
+      } else {
+        showToast(res.message, 'error');
+      }
+    }
+
+    function handleCustomerLogout() {
+      Store.logoutCustomer();
+      showToast('Đã đăng xuất tài khoản');
+      renderUserNav();
+    }
+
+    function handleAdminLogout() {
+      Store.logoutAdmin();
+      showToast('Đã đăng xuất khỏi tài khoản Admin');
+      renderUserNav();
+    }
+
+    // ── Init ──────────────────────────────────────────────────
+    async function initPage() {
+      await Store.init();
+      renderUserNav();
+      updateCartBadge();
+      if (productId) { await renderProduct(); }
+      else {
+        document.getElementById('loading-state').innerHTML = `
+          <div class="empty-state">
+            <div class="empty-state__icon">😢</div>
+            <div class="empty-state__title">Không tìm thấy sản phẩm</div>
+            <a href="products.html" class="btn btn-primary mt-16">Về danh sách</a>
+          </div>`;
+      }
+    }
+
+    initPage();
+  </script>
+</body>
+</html>

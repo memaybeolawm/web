@@ -1,0 +1,235 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Quản lý đánh giá – Admin Handmade Corner</title>
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🧶</text></svg>" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,600;0,700;1,400&family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" />
+  <link rel="stylesheet" href="../css/style.css" />
+  <link rel="stylesheet" href="../css/components.css" />
+  <link rel="stylesheet" href="../css/admin.css" />
+</head>
+<body>
+  <div class="admin-layout">
+    <!-- SIDEBAR -->
+    <aside class="admin-sidebar">
+      <div class="admin-sidebar__brand">
+        <span>🧶</span><h2>Handmade Corner</h2>
+        <span class="admin-sidebar__badge">Admin</span>
+      </div>
+      <nav class="admin-sidebar__nav">
+        <div class="admin-nav__section">
+          <div class="admin-nav__section-title">Tổng quan</div>
+          <a href="index.html" class="admin-nav__item"><i class="fas fa-tachometer-alt"></i> Dashboard</a>
+          <a href="../index.html" class="admin-nav__item" target="_blank"><i class="fas fa-external-link-alt"></i> Xem website</a>
+        </div>
+        <div class="admin-nav__section">
+          <div class="admin-nav__section-title">Quản lý</div>
+          <a href="products.html" class="admin-nav__item"><i class="fas fa-box-open"></i> Sản phẩm</a>
+          <a href="orders.html" class="admin-nav__item"><i class="fas fa-shopping-cart"></i> Đơn hàng</a>
+          <a href="reviews.html" class="admin-nav__item active"><i class="fas fa-star"></i> Đánh giá</a>
+        </div>
+      </nav>
+    </aside>
+
+    <!-- MAIN -->
+    <main class="admin-main">
+      <div class="admin-topbar">
+        <div class="admin-topbar__title">Quản lý đánh giá (SQLite DB)</div>
+        <div class="admin-topbar__actions">
+          <div class="admin-topbar__user"><div class="admin-topbar__avatar">A</div> <span id="admin-name">Admin</span></div>
+          <button class="btn btn-ghost btn-sm" onclick="handleAdminLogout()" title="Đăng xuất Admin">
+            <i class="fas fa-sign-out-alt"></i> Đăng xuất
+          </button>
+        </div>
+      </div>
+
+      <div class="admin-content">
+        <div class="admin-page-header">
+          <div>
+            <h2>Đánh giá sản phẩm</h2>
+            <p id="review-count">Đang tải...</p>
+          </div>
+        </div>
+
+        <!-- STATS -->
+        <div class="stats-grid" style="grid-template-columns:repeat(5,1fr);margin-bottom:28px;" id="review-stats">
+          <!-- Rendered by JS -->
+        </div>
+
+        <!-- FILTERS -->
+        <div class="table-controls">
+          <div style="display:flex;gap:10px;flex-wrap:wrap;flex:1;">
+            <div class="table-search" style="max-width:280px;">
+              <input type="text" id="search-input" placeholder="Tìm theo tên, sản phẩm..." oninput="applyFilters()" />
+              <button><i class="fas fa-search"></i></button>
+            </div>
+            <select class="form-control" id="star-filter" style="max-width:140px;" onchange="applyFilters()">
+              <option value="">Mọi số sao</option>
+              <option value="5">⭐⭐⭐⭐⭐ 5 sao</option>
+              <option value="4">⭐⭐⭐⭐ 4 sao</option>
+              <option value="3">⭐⭐⭐ 3 sao</option>
+              <option value="2">⭐⭐ 2 sao</option>
+              <option value="1">⭐ 1 sao</option>
+            </select>
+          </div>
+          <div style="font-size:.85rem;color:var(--text-light);" id="result-count">0 đánh giá</div>
+        </div>
+
+        <!-- TABLE -->
+        <div class="table-wrap">
+          <table>
+            <thead>
+              <tr>
+                <th>Sản phẩm</th>
+                <th>Khách hàng</th>
+                <th>Đánh giá</th>
+                <th>Nhận xét</th>
+                <th>Mã đơn</th>
+                <th>Thời gian</th>
+                <th>Thao tác</th>
+              </tr>
+            </thead>
+            <tbody id="review-table-body">
+              <tr><td colspan="7" style="text-align:center;padding:40px;color:var(--text-light);">Đang tải...</td></tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </main>
+  </div>
+
+  <div id="toast-container"></div>
+
+  <script src="../js/store.js"></script>
+  <script>
+    let allProducts = [];
+
+    function showToast(msg, type = 'success') {
+      const tc = document.getElementById('toast-container');
+      const t  = document.createElement('div');
+      t.className = `toast ${type}`;
+      t.innerHTML = `<i class="fas fa-${type==='success'?'check-circle':'times-circle'}"></i> ${msg}`;
+      tc.appendChild(t);
+      setTimeout(() => t.remove(), 3200);
+    }
+
+    function renderStars(rating) {
+      let s = '';
+      for (let i = 1; i <= 5; i++)
+        s += `<i class="${i<=rating?'fas':'far'} fa-star" style="color:#F59E0B;font-size:.85rem;"></i>`;
+      return s;
+    }
+
+    async function renderReviewStats() {
+      const reviews = await Store.getReviews();
+      const avg = reviews.length ? reviews.reduce((s,r) => s+r.rating, 0) / reviews.length : 0;
+      const stats = [
+        { icon:'⭐', label:'Tổng đánh giá', value:reviews.length, color:'#F59E0B' },
+        { icon:'💯', label:'Điểm TB',       value:avg.toFixed(1), color:'#10B981' },
+        { icon:'🌟', label:'5 sao',          value:reviews.filter(r => r.rating===5).length, color:'#10B981' },
+        { icon:'👍', label:'4 sao',          value:reviews.filter(r => r.rating===4).length, color:'#3B82F6' },
+        { icon:'⚠️', label:'≤ 3 sao',        value:reviews.filter(r => r.rating<=3).length, color:'#EF4444' },
+      ];
+      document.getElementById('review-stats').innerHTML = stats.map(s => `
+        <div class="stat-card" style="border-left-color:${s.color};">
+          <div class="stat-card__icon" style="background:${s.color}20;">${s.icon}</div>
+          <div>
+            <div class="stat-card__value" style="color:${s.color};font-size:1.5rem;">${s.value}</div>
+            <div class="stat-card__label">${s.label}</div>
+          </div>
+        </div>`).join('');
+    }
+
+    async function applyFilters() {
+      let reviews = await Store.getReviews();
+      const search = document.getElementById('search-input').value.toLowerCase();
+      const star   = document.getElementById('star-filter').value;
+      if (search) reviews = reviews.filter(r =>
+        r.customerName.toLowerCase().includes(search) ||
+        (allProducts.find(p=>p.id===r.productId)?.name || '').toLowerCase().includes(search) ||
+        r.comment.toLowerCase().includes(search)
+      );
+      if (star) reviews = reviews.filter(r => r.rating === parseInt(star));
+      renderTable(reviews);
+    }
+
+    function renderTable(reviews) {
+      document.getElementById('result-count').textContent = `${reviews.length} đánh giá`;
+      document.getElementById('review-count').textContent = `Tổng ${reviews.length} đánh giá`;
+
+      if (reviews.length === 0) {
+        document.getElementById('review-table-body').innerHTML =
+          '<tr><td colspan="7" style="text-align:center;padding:40px;color:var(--text-light);">Không có đánh giá nào</td></tr>';
+        return;
+      }
+
+      document.getElementById('review-table-body').innerHTML = reviews.map(r => {
+        const product = allProducts.find(p => p.id === r.productId);
+        const ratingColor = r.rating >= 4 ? '#10B981' : r.rating === 3 ? '#F59E0B' : '#EF4444';
+        const img = product?.images[0] ? (product.images[0].startsWith('http') || product.images[0].startsWith('images/') ? product.images[0] : '../' + product.images[0]) : '';
+        return `
+          <tr>
+            <td>
+              <div style="display:flex;align-items:center;gap:10px;">
+                ${product ? `<img src="${img}" style="width:40px;height:40px;border-radius:var(--radius-sm);object-fit:cover;" />` : ''}
+                <div style="font-size:.85rem;font-weight:600;max-width:160px;">${product ? product.name : r.productId}</div>
+              </div>
+            </td>
+            <td>
+              <div style="font-weight:600;">${r.customerName}</div>
+            </td>
+            <td>
+              <div style="display:flex;align-items:center;gap:4px;">
+                ${renderStars(r.rating)}
+              </div>
+              <div style="font-size:.8rem;font-weight:700;color:${ratingColor};margin-top:2px;">${r.rating}/5</div>
+            </td>
+            <td style="max-width:240px;">
+              <div style="font-size:.85rem;color:var(--text-medium);display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden;">
+                ${r.comment}
+              </div>
+            </td>
+            <td style="font-size:.78rem;color:var(--accent);font-weight:600;">${r.orderId}</td>
+            <td style="font-size:.78rem;color:var(--text-light);">${Store.formatDate(r.createdAt)}</td>
+            <td>
+              <button class="btn btn-danger btn-sm" onclick="deleteReview('${r.id}','${r.customerName}')" title="Xóa đánh giá">
+                <i class="fas fa-trash"></i>
+              </button>
+            </td>
+          </tr>`;
+      }).join('');
+    }
+
+    async function deleteReview(reviewId, authorName) {
+      if (!confirm(`Xóa đánh giá của "${authorName}" khỏi Database?`)) return;
+      await Store.deleteReview(reviewId);
+      showToast('Đã xóa đánh giá');
+      await renderReviewStats();
+      await applyFilters();
+    }
+
+    function handleAdminLogout() {
+      Store.logoutAdmin();
+      showToast('Đã đăng xuất khỏi tài khoản Admin');
+      setTimeout(() => { window.location.href = 'login.html'; }, 500);
+    }
+
+    async function initPage() {
+      if (!Store.requireAdmin()) return;
+      const admin = Store.getCurrentAdmin();
+      if (admin) document.getElementById('admin-name').textContent = admin.name || admin.username;
+
+      await Store.init();
+      allProducts = await Store.getProducts();
+      await renderReviewStats();
+      await applyFilters();
+    }
+
+    initPage();
+  </script>
+</body>
+</html>

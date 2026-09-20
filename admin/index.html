@@ -1,0 +1,246 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Admin Dashboard – Handmade Corner</title>
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🧶</text></svg>" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,600;0,700;1,400&family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" />
+  <link rel="stylesheet" href="../css/style.css" />
+  <link rel="stylesheet" href="../css/components.css" />
+  <link rel="stylesheet" href="../css/admin.css" />
+</head>
+<body>
+  <div class="admin-layout">
+    <!-- SIDEBAR -->
+    <aside class="admin-sidebar">
+      <div class="admin-sidebar__brand">
+        <span>🧶</span>
+        <h2>Handmade Corner</h2>
+        <span class="admin-sidebar__badge">Admin</span>
+      </div>
+      <nav class="admin-sidebar__nav">
+        <div class="admin-nav__section">
+          <div class="admin-nav__section-title">Tổng quan</div>
+          <a href="index.html" class="admin-nav__item active">
+            <i class="fas fa-tachometer-alt"></i> Dashboard
+          </a>
+          <a href="../index.html" class="admin-nav__item" target="_blank">
+            <i class="fas fa-external-link-alt"></i> Xem website
+          </a>
+        </div>
+        <div class="admin-nav__section">
+          <div class="admin-nav__section-title">Quản lý</div>
+          <a href="products.html" class="admin-nav__item">
+            <i class="fas fa-box-open"></i> Sản phẩm
+          </a>
+          <a href="orders.html" class="admin-nav__item">
+            <i class="fas fa-shopping-cart"></i> Đơn hàng
+            <span class="admin-nav__badge" id="pending-count">0</span>
+          </a>
+          <a href="reviews.html" class="admin-nav__item">
+            <i class="fas fa-star"></i> Đánh giá
+          </a>
+        </div>
+        <div class="admin-nav__section">
+          <div class="admin-nav__section-title">Hệ thống</div>
+          <a href="#" class="admin-nav__item" onclick="resetData()">
+            <i class="fas fa-redo"></i> Reset dữ liệu
+          </a>
+        </div>
+      </nav>
+    </aside>
+
+    <!-- MAIN -->
+    <main class="admin-main">
+      <div class="admin-topbar">
+        <div class="admin-topbar__title">Dashboard (SQLite Database)</div>
+        <div class="admin-topbar__actions">
+          <span style="font-size:.82rem;color:var(--text-light);" id="current-time"></span>
+          <div class="admin-topbar__user" id="admin-user-display">
+            <div class="admin-topbar__avatar">A</div> <span id="admin-name">Admin</span>
+          </div>
+          <button class="btn btn-ghost btn-sm" onclick="handleAdminLogout()" title="Đăng xuất Admin">
+            <i class="fas fa-sign-out-alt"></i> Đăng xuất
+          </button>
+        </div>
+      </div>
+
+      <div class="admin-content">
+        <!-- STATS GRID -->
+        <div class="stats-grid" id="stats-grid">
+          <!-- Rendered by JS -->
+        </div>
+
+        <!-- CHARTS ROW -->
+        <div class="grid-2" style="margin-bottom:28px;">
+          <!-- Recent Orders -->
+          <div class="chart-card">
+            <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:20px;">
+              <h4>📦 Đơn hàng gần đây</h4>
+              <a href="orders.html" class="btn btn-ghost btn-sm">Xem tất cả</a>
+            </div>
+            <div class="recent-list" id="recent-orders">
+              <!-- Rendered by JS -->
+            </div>
+          </div>
+
+          <!-- Top Products -->
+          <div class="chart-card">
+            <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:20px;">
+              <h4>🏆 Sản phẩm bán chạy</h4>
+              <a href="products.html" class="btn btn-ghost btn-sm">Quản lý</a>
+            </div>
+            <div id="top-products">
+              <!-- Rendered by JS -->
+            </div>
+          </div>
+        </div>
+
+        <!-- QUICK STATS -->
+        <div class="chart-card">
+          <h4 style="margin-bottom:20px;">📊 Thống kê theo danh mục</h4>
+          <div id="category-stats" style="display:grid;grid-template-columns:repeat(auto-fill,minmax(200px,1fr));gap:16px;">
+            <!-- Rendered by JS -->
+          </div>
+        </div>
+      </div>
+    </main>
+  </div>
+
+  <div id="toast-container"></div>
+
+  <script src="../js/store.js"></script>
+  <script>
+    function showToast(msg, type = 'success') {
+      const tc = document.getElementById('toast-container');
+      const t  = document.createElement('div');
+      t.className = `toast ${type}`;
+      t.innerHTML = `<i class="fas fa-${type==='success'?'check-circle':'times-circle'}"></i> ${msg}`;
+      tc.appendChild(t);
+      setTimeout(() => t.remove(), 3200);
+    }
+
+    function updateClock() {
+      document.getElementById('current-time').textContent = new Date().toLocaleString('vi-VN');
+    }
+    updateClock(); setInterval(updateClock, 1000);
+
+    async function renderStats() {
+      const s = await Store.getStats();
+      document.getElementById('pending-count').textContent = s.pendingOrders;
+
+      const statsData = [
+        { icon: '💰', label: 'Doanh thu',      value: Store.formatPrice(s.totalRevenue), color: '#10B981', border: '#10B981' },
+        { icon: '📦', label: 'Tổng đơn hàng', value: s.totalOrders,      color: '#3B82F6', border: '#3B82F6' },
+        { icon: '⏳', label: 'Chờ xử lý',     value: s.pendingOrders,    color: '#F59E0B', border: '#F59E0B' },
+        { icon: '🎁', label: 'Sản phẩm',       value: s.totalProducts,    color: '#8B5CF6', border: '#8B5CF6' },
+        { icon: '✅', label: 'Hoàn thành',      value: s.completedOrders,  color: '#10B981', border: '#10B981' },
+        { icon: '⭐', label: 'Đánh giá',        value: s.totalReviews,     color: '#EC4899', border: '#EC4899' },
+      ];
+
+      document.getElementById('stats-grid').style.gridTemplateColumns = 'repeat(3,1fr)';
+      document.getElementById('stats-grid').innerHTML = statsData.map(d => `
+        <div class="stat-card" style="border-left-color:${d.border};">
+          <div class="stat-card__icon" style="background:${d.color}20;font-size:1.5rem;">${d.icon}</div>
+          <div>
+            <div class="stat-card__value" style="color:${d.color};">${d.value}</div>
+            <div class="stat-card__label">${d.label}</div>
+          </div>
+        </div>`).join('');
+    }
+
+    async function renderRecentOrders() {
+      const orders = await Store.getOrders();
+      const recent = orders.slice(0, 6);
+      const STATUS_INFO = Store.ORDER_STATUSES;
+
+      document.getElementById('recent-orders').innerHTML = recent.length === 0
+        ? '<p style="color:var(--text-light);text-align:center;">Chưa có đơn hàng nào</p>'
+        : recent.map(o => {
+            const info = STATUS_INFO[o.status.toUpperCase()] || {};
+            return `
+              <div class="recent-item">
+                <div>
+                  <div class="recent-item__id">${o.id}</div>
+                  <div class="recent-item__customer">${o.customer.name}</div>
+                </div>
+                <span class="badge badge-${o.status}">${info.icon || ''} ${info.label || o.status}</span>
+                <div class="recent-item__total">${Store.formatPrice(o.total)}</div>
+              </div>`;
+          }).join('');
+    }
+
+    async function renderTopProducts() {
+      const products = await Store.getProducts({ sort: 'popular' });
+      const top = products.filter(p => p.sold > 0).slice(0, 5);
+      const maxSold = top[0]?.sold || 1;
+
+      document.getElementById('top-products').innerHTML = top.length === 0
+        ? '<p style="color:var(--text-light);text-align:center;">Chưa có dữ liệu bán hàng</p>'
+        : top.map((p, i) => `
+          <div style="display:flex;align-items:center;gap:12px;margin-bottom:14px;">
+            <div style="width:24px;height:24px;border-radius:50%;background:${['#F59E0B','#9CA3AF','#CD7F32','var(--border)','var(--border)'][i]||'var(--border)'};display:flex;align-items:center;justify-content:center;font-size:.72rem;font-weight:700;color:#fff;flex-shrink:0;">${i+1}</div>
+            <img src="${p.images[0]}" style="width:40px;height:40px;border-radius:var(--radius-sm);object-fit:cover;flex-shrink:0;" />
+            <div style="flex:1;min-width:0;">
+              <div style="font-size:.85rem;font-weight:600;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;">${p.name}</div>
+              <div class="progress-bar" style="margin-top:4px;">
+                <div class="progress-bar__fill" style="width:${p.sold/maxSold*100}%"></div>
+              </div>
+            </div>
+            <div style="font-size:.82rem;color:var(--accent);font-weight:700;white-space:nowrap;">${p.sold} bán</div>
+          </div>`).join('');
+    }
+
+    async function renderCategoryStats() {
+      const cats = await Store.getCategories();
+      const products = await Store.getProducts();
+
+      document.getElementById('category-stats').innerHTML = cats.map(cat => {
+        const catProds = products.filter(p => p.categoryId === cat.id);
+        const totalStock = catProds.reduce((s,p) => s+p.stock, 0);
+        const totalSold  = catProds.reduce((s,p) => s+p.sold, 0);
+        return `
+          <div style="background:var(--bg-section);border-radius:var(--radius);padding:16px;border:1.5px solid var(--border-light);">
+            <div style="font-size:1.5rem;margin-bottom:8px;">${cat.icon}</div>
+            <div style="font-size:.88rem;font-weight:600;margin-bottom:8px;">${cat.name}</div>
+            <div style="display:flex;justify-content:space-between;font-size:.78rem;color:var(--text-light);">
+              <span>${catProds.length} SP</span>
+              <span>Còn: ${totalStock}</span>
+              <span>Bán: ${totalSold}</span>
+            </div>
+          </div>`;
+      }).join('');
+    }
+
+    async function resetData() {
+      if (!confirm('Reset toàn bộ dữ liệu SQLite về mặc định? Thao tác này không thể hoàn tác!')) return;
+      await Store.reset();
+      showToast('Đã reset dữ liệu thành công!');
+      setTimeout(() => location.reload(), 1000);
+    }
+
+    function handleAdminLogout() {
+      Store.logoutAdmin();
+      showToast('Đã đăng xuất khỏi tài khoản Admin');
+      setTimeout(() => { window.location.href = 'login.html'; }, 500);
+    }
+
+    async function initPage() {
+      if (!Store.requireAdmin()) return;
+      const admin = Store.getCurrentAdmin();
+      if (admin) document.getElementById('admin-name').textContent = admin.name || admin.username;
+      
+      await Store.init();
+      await renderStats();
+      await renderRecentOrders();
+      await renderTopProducts();
+      await renderCategoryStats();
+    }
+
+    initPage();
+  </script>
+</body>
+</html>

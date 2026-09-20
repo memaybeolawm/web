@@ -1,0 +1,638 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Handmade Corner – Cửa Hàng Thủ Công Việt Nam</title>
+  <meta name="description" content="Handmade Corner – Nơi bán sản phẩm thủ công handmade chất lượng cao: đồ len, trang sức, nến thơm, hoa handmade, túi handmade và nhiều hơn nữa." />
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🧶</text></svg>" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,600;0,700;1,400&family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" />
+  <link rel="stylesheet" href="css/style.css" />
+  <link rel="stylesheet" href="css/components.css" />
+</head>
+<body>
+  <!-- NAVBAR -->
+  <nav class="navbar" id="navbar">
+    <div class="navbar__inner">
+      <a href="index.html" class="navbar__logo">
+        <span>🧶</span> Handmade Corner
+      </a>
+      <div class="navbar__nav">
+        <a href="index.html" class="active">Trang chủ</a>
+        <a href="products.html">Sản phẩm</a>
+        <a href="orders.html">Đơn hàng</a>
+      </div>
+      <div class="navbar__actions">
+        <a href="cart.html" class="navbar__cart" id="nav-cart">
+          <i class="fas fa-shopping-bag"></i>
+          <span class="cart-badge" id="cart-badge" style="display:none">0</span>
+        </a>
+
+        <!-- User Action -->
+        <div id="user-nav-action">
+          <button class="btn btn-outline btn-sm" onclick="openAuthModal()">
+            <i class="fas fa-user"></i> Đăng nhập
+          </button>
+        </div>
+
+        <button class="hamburger" id="hamburger" aria-label="Menu">
+          <span></span><span></span><span></span>
+        </button>
+      </div>
+    </div>
+  </nav>
+
+  <!-- MOBILE NAV -->
+  <div class="mobile-nav" id="mobile-nav">
+    <a href="index.html"><i class="fas fa-home"></i> Trang chủ</a>
+    <a href="products.html"><i class="fas fa-store"></i> Sản phẩm</a>
+    <a href="orders.html"><i class="fas fa-box"></i> Đơn hàng</a>
+    <a href="cart.html"><i class="fas fa-shopping-bag"></i> Giỏ hàng</a>
+    <div id="mobile-user-action" style="padding:12px 16px;"></div>
+  </div>
+
+  <!-- HERO -->
+  <section class="hero">
+    <div class="container">
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:48px;align-items:center;">
+        <div class="hero__content">
+          <div class="hero__tag">🌸 Handmade với tình yêu &amp; sự tận tâm</div>
+          <h1 class="hero__title">
+            Sản phẩm <em>Thủ Công</em><br />Từ Bàn Tay Khéo Léo
+          </h1>
+          <p class="hero__desc">
+            Mỗi sản phẩm tại Handmade Corner đều được làm thủ công tỉ mỉ, 
+            mang theo tâm huyết và sự sáng tạo. Từ đồ len, trang sức đến nến thơm – 
+            tất cả đều độc đáo và chất lượng.
+          </p>
+          <div class="hero__actions">
+            <a href="products.html" class="btn btn-primary btn-lg">
+              <i class="fas fa-store"></i> Khám phá ngay
+            </a>
+            <a href="#categories" class="btn btn-outline btn-lg">
+              Xem danh mục
+            </a>
+          </div>
+        </div>
+        <div class="hero__img" style="aspect-ratio:1/1;max-height:480px;overflow:hidden;">
+          <img src="images/hero-main.png"
+               alt="Workshop làm đồ thủ công handmade" style="width:100%;height:100%;object-fit:cover;" />
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- FEATURES BAR -->
+  <div class="features-bar">
+    <div class="container">
+      <div class="features-bar__inner">
+        <div class="feature-item">
+          <div class="feature-item__icon">✂️</div>
+          <div class="feature-item__title">100% Handmade</div>
+          <div class="feature-item__desc">Thủ công từng chiếc</div>
+        </div>
+        <div class="feature-item">
+          <div class="feature-item__icon">🚚</div>
+          <div class="feature-item__title">Giao hàng toàn quốc</div>
+          <div class="feature-item__desc">2–5 ngày làm việc</div>
+        </div>
+        <div class="feature-item">
+          <div class="feature-item__icon">💝</div>
+          <div class="feature-item__title">Gói quà miễn phí</div>
+          <div class="feature-item__desc">Khi mua từ 200k</div>
+        </div>
+        <div class="feature-item">
+          <div class="feature-item__icon">🔄</div>
+          <div class="feature-item__title">Đổi trả dễ dàng</div>
+          <div class="feature-item__desc">Trong vòng 7 ngày</div>
+        </div>
+        <div class="feature-item">
+          <div class="feature-item__icon">📞</div>
+          <div class="feature-item__title">Hỗ trợ 7/7</div>
+          <div class="feature-item__desc">Tư vấn nhiệt tình</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- CATEGORIES -->
+  <section class="section" id="categories">
+    <div class="container">
+      <div class="section-header">
+        <div class="section-header__tag">🎨 Danh mục sản phẩm</div>
+        <h2 class="section-header__title">Khám phá <em>Bộ Sưu Tập</em></h2>
+        <p class="section-header__subtitle">10 nhóm sản phẩm handmade độc đáo, đa dạng phong cách</p>
+      </div>
+      <div class="category-grid" id="category-grid">
+        <!-- Rendered by JS -->
+      </div>
+    </div>
+  </section>
+
+  <!-- FEATURED PRODUCTS -->
+  <section class="section" style="background:var(--bg-section);">
+    <div class="container">
+      <div class="section-header">
+        <div class="section-header__tag">⭐ Nổi bật</div>
+        <h2 class="section-header__title">Sản phẩm <em>Bán Chạy</em></h2>
+        <p class="section-header__subtitle">Những sản phẩm được yêu thích nhất tại Handmade Corner</p>
+      </div>
+      <div class="grid-4" id="featured-grid">
+        <!-- Rendered by JS -->
+      </div>
+      <div class="text-center mt-32">
+        <a href="products.html" class="btn btn-outline btn-lg">
+          Xem tất cả sản phẩm <i class="fas fa-arrow-right"></i>
+        </a>
+      </div>
+    </div>
+  </section>
+
+  <!-- NEW ARRIVALS -->
+  <section class="section">
+    <div class="container">
+      <div class="section-header">
+        <div class="section-header__tag">🌸 Hoa len mới</div>
+        <h2 class="section-header__title">Hoa Len – <em>5 Kiểu Mới Nhất</em></h2>
+        <p class="section-header__subtitle">Đan bằng len cotton, giá 100k–120k, số lượng có hạn mỗi kiểu chỉ 10 cái</p>
+      </div>
+      <div class="grid-4" id="flowers-grid">
+        <!-- Rendered by JS -->
+      </div>
+    </div>
+  </section>
+
+  <!-- BANNER PROMO -->
+  <section style="background:linear-gradient(135deg,var(--accent-dark),var(--accent));padding:60px 0;">
+    <div class="container">
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:40px;align-items:center;color:#fff;">
+        <div>
+          <div style="font-size:.85rem;font-weight:600;opacity:.8;margin-bottom:12px;text-transform:uppercase;letter-spacing:.8px;">🎁 Ưu đãi đặc biệt</div>
+          <h2 style="font-family:var(--font-heading);font-size:clamp(1.6rem,3vw,2.4rem);margin-bottom:16px;">Mua Combo Túi Len<br />Tặng Kèm Phụ Kiện</h2>
+          <p style="opacity:.85;margin-bottom:28px;line-height:1.7;">
+            Mua túi len bất kỳ, được tặng kèm 1 hoa len hoặc gấu len mini gắn túi. 
+            Phong cách và đáng yêu hơn bao giờ hết!
+          </p>
+          <a href="products.html?cat=tui-handmade" class="btn btn-light btn-lg">
+            Mua ngay <i class="fas fa-arrow-right"></i>
+          </a>
+        </div>
+        <div style="border-radius:var(--radius-lg);overflow:hidden;box-shadow:0 20px 60px rgba(0,0,0,.3);">
+          <img src="images/tui-len-tote-nho.png"
+               alt="Combo túi len" style="width:100%;height:300px;object-fit:cover;" />
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- TESTIMONIALS -->
+  <section class="section">
+    <div class="container">
+      <div class="section-header">
+        <div class="section-header__tag">💬 Đánh giá</div>
+        <h2 class="section-header__title">Khách hàng <em>Nói gì?</em></h2>
+      </div>
+      <div class="grid-3" id="reviews-grid">
+        <!-- Rendered by JS -->
+      </div>
+    </div>
+  </section>
+
+  <!-- AUTH MODAL (UNIFIED LOGINS) -->
+  <div id="auth-modal" class="modal-overlay" style="display:none;">
+    <div class="modal" style="max-width:460px;">
+      <div class="modal__header">
+        <div style="display:flex;gap:12px;">
+          <h3 id="auth-tab-customer" onclick="switchAuthTab('customer')" style="cursor:pointer;color:var(--accent);border-bottom:2px solid var(--accent);padding-bottom:4px;font-size:1rem;">Khách hàng</h3>
+          <h3 id="auth-tab-admin" onclick="switchAuthTab('admin')" style="cursor:pointer;color:var(--text-light);padding-bottom:4px;font-size:1rem;">Quản trị viên</h3>
+          <h3 id="auth-tab-register" onclick="switchAuthTab('register')" style="cursor:pointer;color:var(--text-light);padding-bottom:4px;font-size:1rem;">Đăng ký</h3>
+        </div>
+        <button class="modal__close" onclick="closeAuthModal()">×</button>
+      </div>
+      <div class="modal__body">
+        <!-- CUSTOMER LOGIN FORM -->
+        <form id="auth-form-customer" onsubmit="handleCustomerLogin(event)">
+          <div class="form-group">
+            <label class="form-label">Email khách hàng <span class="required">*</span></label>
+            <input type="email" id="login-email" class="form-control" placeholder="khach@gmail.com" required />
+          </div>
+          <div class="form-group">
+            <label class="form-label">Mật khẩu <span class="required">*</span></label>
+            <input type="password" id="login-pass" class="form-control" placeholder="Mật khẩu..." required />
+          </div>
+          <div style="font-size:.78rem;color:var(--text-light);margin-bottom:16px;">Tài khoản mẫu: <strong>khach@gmail.com</strong> / <strong>123456</strong></div>
+          <button type="submit" class="btn btn-primary btn-full btn-lg" id="c-login-btn">
+            <i class="fas fa-sign-in-alt"></i> Đăng nhập Khách hàng
+          </button>
+        </form>
+
+        <!-- ADMIN LOGIN FORM -->
+        <form id="auth-form-admin" onsubmit="handleAdminLoginModal(event)" style="display:none;">
+          <div class="form-group">
+            <label class="form-label">Tên đăng nhập Admin <span class="required">*</span></label>
+            <input type="text" id="admin-login-user" class="form-control" placeholder="admin" required value="admin" />
+          </div>
+          <div class="form-group">
+            <label class="form-label">Mật khẩu Admin <span class="required">*</span></label>
+            <input type="password" id="admin-login-pass" class="form-control" placeholder="admin123" required value="admin123" />
+          </div>
+          <div style="font-size:.78rem;color:var(--text-light);margin-bottom:16px;">Tài khoản mặc định: <strong>admin</strong> / <strong>admin123</strong></div>
+          <button type="submit" class="btn btn-primary btn-full btn-lg" id="a-login-btn">
+            <i class="fas fa-user-shield"></i> Đăng nhập Quản trị viên
+          </button>
+        </form>
+
+        <!-- REGISTER FORM -->
+        <form id="auth-form-register" onsubmit="handleCustomerRegister(event)" style="display:none;">
+          <div class="form-group">
+            <label class="form-label">Họ và tên <span class="required">*</span></label>
+            <input type="text" id="reg-name" class="form-control" placeholder="Nguyễn Văn A" required />
+          </div>
+          <div class="form-group">
+            <label class="form-label">Email <span class="required">*</span></label>
+            <input type="email" id="reg-email" class="form-control" placeholder="email@example.com" required />
+          </div>
+          <div class="form-group">
+            <label class="form-label">Mật khẩu <span class="required">*</span></label>
+            <input type="password" id="reg-pass" class="form-control" placeholder="Tối thiểu 6 ký tự" required minlength="6" />
+          </div>
+          <div class="form-group">
+            <label class="form-label">Số điện thoại</label>
+            <input type="tel" id="reg-phone" class="form-control" placeholder="0901234567" />
+          </div>
+          <button type="submit" class="btn btn-primary btn-full btn-lg" id="c-reg-btn">
+            <i class="fas fa-user-plus"></i> Tạo tài khoản
+          </button>
+        </form>
+      </div>
+    </div>
+  </div>
+  <footer class="footer">
+    <div class="container">
+      <div class="footer__grid">
+        <div>
+          <div class="footer__logo"><span>🧶</span> Handmade Corner</div>
+          <p class="footer__desc">
+            Nơi mỗi sản phẩm là một câu chuyện, mỗi đường may là một tâm huyết. 
+            Chúng tôi tin rằng handmade không chỉ là sản phẩm – đó là cảm xúc và nghệ thuật.
+          </p>
+          <div class="footer__social">
+            <a href="#" title="Facebook"><i class="fab fa-facebook-f"></i></a>
+            <a href="#" title="Instagram"><i class="fab fa-instagram"></i></a>
+            <a href="#" title="TikTok"><i class="fab fa-tiktok"></i></a>
+            <a href="#" title="Zalo">Z</a>
+          </div>
+        </div>
+        <div>
+          <h5>Sản phẩm</h5>
+          <ul>
+            <li><a href="products.html?cat=do-len">Đồ Len</a></li>
+            <li><a href="products.html?cat=trang-suc">Trang Sức</a></li>
+            <li><a href="products.html?cat=hoa-handmade">Hoa Handmade</a></li>
+            <li><a href="products.html?cat=tui-handmade">Túi Handmade</a></li>
+            <li><a href="products.html?cat=qua-tang">Quà Tặng</a></li>
+          </ul>
+        </div>
+        <div>
+          <h5>Hỗ trợ</h5>
+          <ul>
+            <li><a href="#">Hướng dẫn đặt hàng</a></li>
+            <li><a href="#">Chính sách đổi trả</a></li>
+            <li><a href="#">Vận chuyển & Phí ship</a></li>
+            <li><a href="orders.html">Tra cứu đơn hàng</a></li>
+            <li><a href="#">Câu hỏi thường gặp</a></li>
+          </ul>
+        </div>
+        <div>
+          <h5>Liên hệ</h5>
+          <ul>
+            <li><a href="#"><i class="fas fa-map-marker-alt"></i> TP. Hồ Chí Minh</a></li>
+            <li><a href="tel:0901234567"><i class="fas fa-phone"></i> 090 123 4567</a></li>
+            <li><a href="mailto:hello@handmadecorner.vn"><i class="fas fa-envelope"></i> hello@handmadecorner.vn</a></li>
+          </ul>
+          <div style="margin-top:16px;">
+            <p style="font-size:.8rem;color:rgba(255,255,255,.4);margin-bottom:8px;">Nhận ưu đãi qua email:</p>
+            <div style="display:flex;gap:0;">
+              <input type="email" placeholder="Email của bạn..."
+                style="flex:1;padding:10px 14px;background:rgba(255,255,255,.1);border:1px solid rgba(255,255,255,.2);border-radius:var(--radius-sm) 0 0 var(--radius-sm);color:#fff;outline:none;font-size:.85rem;" />
+              <button class="btn btn-primary btn-sm" style="border-radius:0 var(--radius-sm) var(--radius-sm) 0;">
+                <i class="fas fa-paper-plane"></i>
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="footer__bottom">
+      <div class="container">
+        © 2026 Handmade Corner. Được làm với 💕 tại Việt Nam.
+        &nbsp;|&nbsp; <a href="admin/index.html" style="color:rgba(255,255,255,.3);">Admin</a>
+      </div>
+    </div>
+  </footer>
+
+  <!-- TOAST CONTAINER -->
+  <div id="toast-container"></div>
+
+  <!-- SCRIPTS -->
+  <script src="js/store.js"></script>
+  <script>
+    let allCategories = [];
+
+    // ── Navbar scroll ───────────────────────────────────────
+    window.addEventListener('scroll', () => {
+      document.getElementById('navbar').classList.toggle('scrolled', window.scrollY > 20);
+    });
+
+    // ── Mobile menu ─────────────────────────────────────────
+    const hamburger = document.getElementById('hamburger');
+    const mobileNav = document.getElementById('mobile-nav');
+    hamburger.addEventListener('click', () => {
+      hamburger.classList.toggle('open');
+      mobileNav.classList.toggle('open');
+    });
+
+    // ── Cart badge ───────────────────────────────────────────
+    function updateCartBadge() {
+      const count = Store.getCartCount();
+      const badge = document.getElementById('cart-badge');
+      badge.textContent = count;
+      badge.style.display = count > 0 ? 'flex' : 'none';
+    }
+
+    // ── Toast ────────────────────────────────────────────────
+    function showToast(msg, type = 'success') {
+      const tc = document.getElementById('toast-container');
+      const t = document.createElement('div');
+      t.className = `toast ${type}`;
+      t.innerHTML = `<i class="fas fa-${type === 'success' ? 'check-circle' : type === 'error' ? 'times-circle' : 'info-circle'}"></i> ${msg}`;
+      tc.appendChild(t);
+      setTimeout(() => t.remove(), 3200);
+    }
+
+    // ── Stars helper ─────────────────────────────────────────
+    function renderStars(rating) {
+      if (!rating) return '<span style="color:var(--text-light);font-size:.8rem;">Chưa có đánh giá</span>';
+      let s = '';
+      for (let i = 1; i <= 5; i++) {
+        s += `<i class="${i <= Math.round(rating) ? 'fas' : 'far'} fa-star" style="color:#F59E0B;font-size:.82rem;"></i>`;
+      }
+      return s;
+    }
+
+    // ── Render Categories ─────────────────────────────────────
+    async function renderCategories() {
+      const categories = await Store.getCategories();
+      allCategories = categories;
+      const products = await Store.getProducts();
+      const grid = document.getElementById('category-grid');
+      grid.innerHTML = categories.map(cat => {
+        const count = products.filter(p => p.categoryId === cat.id).length;
+        return `
+          <a href="products.html?cat=${cat.id}" class="category-card">
+            <div class="category-card__icon">${cat.icon}</div>
+            <div class="category-card__name">${cat.name}</div>
+            <div class="category-card__count">${count} sản phẩm</div>
+          </a>`;
+      }).join('');
+    }
+
+    // ── Render Product Card ────────────────────────────────────
+    function renderProductCard(p) {
+      const cat = allCategories.find(c => c.id === p.categoryId);
+      const catName = cat ? cat.name : '';
+      const badge = p.stock === 0 ? '<span class="product-card__badge badge-out">Hết hàng</span>'
+                  : p.sold === 0  ? '<span class="product-card__badge badge-new">Mới</span>'
+                  : p.sold >= 30  ? '<span class="product-card__badge badge-hot">Hot 🔥</span>'
+                  : '';
+      return `
+        <div class="product-card">
+          <div class="product-card__image">
+            <a href="product-detail.html?id=${p.id}">
+              <img src="${p.images[0]}" alt="${p.name}" loading="lazy" />
+            </a>
+            ${badge}
+          </div>
+          <div class="product-card__body">
+            <div class="product-card__cat">${catName}</div>
+            <div class="product-card__name">
+              <a href="product-detail.html?id=${p.id}">${p.name}</a>
+            </div>
+            <div class="product-card__rating">
+              <div class="stars">${renderStars(p.rating)}</div>
+              <span class="rating-count">${p.reviewCount > 0 ? `(${p.reviewCount})` : ''}</span>
+            </div>
+            <div class="product-card__footer">
+              <div class="product-card__price">${Store.formatPrice(p.price)}</div>
+              <div class="product-card__stock">${p.stock > 0 ? `Còn ${p.stock}` : 'Hết hàng'}</div>
+            </div>
+          </div>
+          <div class="product-card__actions">
+            <button class="btn btn-primary btn-sm" onclick="addToCart('${p.id}', ${p.stock})" ${p.stock === 0 ? 'disabled' : ''}>
+              <i class="fas fa-cart-plus"></i> Thêm giỏ
+            </button>
+            <a href="product-detail.html?id=${p.id}" class="btn btn-outline btn-sm">
+              Xem
+            </a>
+          </div>
+        </div>`;
+    }
+
+    // ── Render Featured ────────────────────────────────────────
+    async function renderFeatured() {
+      const products = await Store.getProducts({ sort: 'popular' });
+      const topSold = products.slice(0, 8);
+      document.getElementById('featured-grid').innerHTML = topSold.map(renderProductCard).join('');
+    }
+
+    // ── Render Flower Section ──────────────────────────────────
+    async function renderFlowers() {
+      const flowers = await Store.getProducts({ cat: 'hoa-handmade' });
+      document.getElementById('flowers-grid').innerHTML = flowers.slice(0, 4).map(renderProductCard).join('');
+    }
+
+    // ── Render Reviews ─────────────────────────────────────────
+    async function renderReviews() {
+      const reviews = await Store.getReviews();
+      const products = await Store.getProducts();
+      const grid = document.getElementById('reviews-grid');
+      grid.innerHTML = reviews.slice(0, 3).map(r => {
+        const product = products.find(p => p.id === r.productId);
+        return `
+          <div class="card">
+            <div class="card-body">
+              <div style="display:flex;gap:4px;margin-bottom:12px;">${renderStars(r.rating)}</div>
+              <p style="font-size:.92rem;color:var(--text-medium);line-height:1.7;margin-bottom:16px;">"${r.comment}"</p>
+              <div style="display:flex;align-items:center;gap:12px;">
+                <div style="width:40px;height:40px;border-radius:50%;background:var(--primary-light);display:flex;align-items:center;justify-content:center;font-weight:700;color:var(--accent);">
+                  ${r.customerName.charAt(0)}
+                </div>
+                <div>
+                  <div style="font-weight:600;font-size:.9rem;">${r.customerName}</div>
+                  <div style="font-size:.75rem;color:var(--text-light);">${product ? product.name : ''}</div>
+                </div>
+              </div>
+            </div>
+          </div>`;
+      }).join('');
+    }
+
+    // ── Add to Cart ────────────────────────────────────────────
+    function addToCart(productId, stock) {
+      const result = Store.addToCart(productId, 1, stock);
+      if (result.success) {
+        showToast('Đã thêm vào giỏ hàng! 🛍️');
+        updateCartBadge();
+      } else {
+        showToast(result.message, 'error');
+      }
+    }
+
+    // ── Auth UI ──────────────────────────────────────────────
+    function renderUserNav() {
+      const user  = Store.getCurrentUser();
+      const admin = Store.getCurrentAdmin();
+      const navEl = document.getElementById('user-nav-action');
+      const mobEl = document.getElementById('mobile-user-action');
+
+      if (admin) {
+        navEl.innerHTML = `
+          <div style="display:flex;align-items:center;gap:8px;">
+            <a href="admin/index.html" class="btn btn-primary btn-sm" style="background:var(--accent-dark);color:#fff;">
+              <i class="fas fa-cog"></i> Trang Quản Trị
+            </a>
+            <button class="btn btn-ghost btn-sm" onclick="handleAdminLogout()" title="Đăng xuất Admin">
+              <i class="fas fa-sign-out-alt"></i>
+            </button>
+          </div>`;
+        if (mobEl) mobEl.innerHTML = `<a href="admin/index.html" class="btn btn-primary btn-sm btn-full"><i class="fas fa-cog"></i> Trang Quản Trị Admin</a>`;
+      } else if (user) {
+        navEl.innerHTML = `
+          <div style="display:flex;align-items:center;gap:8px;position:relative;">
+            <div style="width:32px;height:32px;border-radius:50%;background:var(--accent);color:#fff;display:flex;align-items:center;justify-content:center;font-weight:700;font-size:.85rem;">
+              ${user.name.charAt(0).toUpperCase()}
+            </div>
+            <span style="font-size:.88rem;font-weight:600;color:var(--text-dark);">${user.name.split(' ').pop()}</span>
+            <button class="btn btn-ghost btn-sm" onclick="handleCustomerLogout()" title="Đăng xuất" style="padding:4px 8px;">
+              <i class="fas fa-sign-out-alt"></i>
+            </button>
+          </div>`;
+        if (mobEl) mobEl.innerHTML = `<span style="font-size:.88rem;font-weight:600;">👋 Xin chào, ${user.name}</span> <button class="btn btn-ghost btn-sm" onclick="handleCustomerLogout()">Đăng xuất</button>`;
+      } else {
+        navEl.innerHTML = `
+          <button class="btn btn-outline btn-sm" onclick="openAuthModal()">
+            <i class="fas fa-user"></i> Đăng nhập
+          </button>`;
+        if (mobEl) mobEl.innerHTML = `<button class="btn btn-primary btn-sm btn-full" onclick="openAuthModal()"><i class="fas fa-user"></i> Đăng nhập / Đăng ký</button>`;
+      }
+    }
+
+    function openAuthModal() {
+      document.getElementById('auth-modal').style.display = 'flex';
+    }
+
+    function closeAuthModal() {
+      document.getElementById('auth-modal').style.display = 'none';
+    }
+
+    function switchAuthTab(tab) {
+      const custTab = document.getElementById('auth-tab-customer');
+      const adminTab = document.getElementById('auth-tab-admin');
+      const regTab  = document.getElementById('auth-tab-register');
+      
+      const custForm = document.getElementById('auth-form-customer');
+      const adminForm = document.getElementById('auth-form-admin');
+      const regForm  = document.getElementById('auth-form-register');
+
+      [custTab, adminTab, regTab].forEach(t => { t.style.color = 'var(--text-light)'; t.style.borderBottom = 'none'; });
+      [custForm, adminForm, regForm].forEach(f => { f.style.display = 'none'; });
+
+      if (tab === 'customer') {
+        custTab.style.color = 'var(--accent)'; custTab.style.borderBottom = '2px solid var(--accent)';
+        custForm.style.display = 'block';
+      } else if (tab === 'admin') {
+        adminTab.style.color = 'var(--accent)'; adminTab.style.borderBottom = '2px solid var(--accent)';
+        adminForm.style.display = 'block';
+      } else {
+        regTab.style.color = 'var(--accent)'; regTab.style.borderBottom = '2px solid var(--accent)';
+        regForm.style.display = 'block';
+      }
+    }
+
+    async function handleCustomerLogin(e) {
+      e.preventDefault();
+      const email = document.getElementById('login-email').value;
+      const pass  = document.getElementById('login-pass').value;
+      const res   = await Store.loginCustomer(email, pass);
+      if (res.success) {
+        showToast(`Xin chào ${res.user.name}! 💕`);
+        closeAuthModal();
+        renderUserNav();
+      } else {
+        showToast(res.message, 'error');
+      }
+    }
+
+    async function handleAdminLoginModal(e) {
+      e.preventDefault();
+      const user = document.getElementById('admin-login-user').value;
+      const pass = document.getElementById('admin-login-pass').value;
+      const res  = await Store.loginAdmin(user, pass);
+      if (res.success) {
+        showToast('Đăng nhập Admin thành công!');
+        closeAuthModal();
+        renderUserNav();
+        setTimeout(() => { window.location.href = 'admin/index.html'; }, 600);
+      } else {
+        showToast(res.message, 'error');
+      }
+    }
+
+    async function handleCustomerRegister(e) {
+      e.preventDefault();
+      const userData = {
+        name:     document.getElementById('reg-name').value,
+        email:    document.getElementById('reg-email').value,
+        password: document.getElementById('reg-pass').value,
+        phone:    document.getElementById('reg-phone').value,
+      };
+      const res = await Store.registerCustomer(userData);
+      if (res.success) {
+        showToast('Đăng ký tài khoản thành công! 🎉');
+        closeAuthModal();
+        renderUserNav();
+      } else {
+        showToast(res.message, 'error');
+      }
+    }
+
+    function handleCustomerLogout() {
+      Store.logoutCustomer();
+      showToast('Đã đăng xuất tài khoản');
+      renderUserNav();
+    }
+
+    function handleAdminLogout() {
+      Store.logoutAdmin();
+      showToast('Đã đăng xuất khỏi tài khoản Admin');
+      renderUserNav();
+    }
+
+    // ── Init ───────────────────────────────────────────────────
+    async function initPage() {
+      await Store.init();
+      renderUserNav();
+      updateCartBadge();
+      await renderCategories();
+      await renderFeatured();
+      await renderFlowers();
+      await renderReviews();
+    }
+
+    initPage();
+  </script>
+</body>
+</html>
