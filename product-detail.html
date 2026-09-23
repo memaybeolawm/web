@@ -8,8 +8,8 @@
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,600;0,700;1,400&family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" />
-  <link rel="stylesheet" href="css/style.css" />
-  <link rel="stylesheet" href="css/components.css" />
+  <link rel="stylesheet" href="css/style.css?v=3" />
+  <link rel="stylesheet" href="css/components.css?v=3" />
 </head>
 <body>
   <!-- NAVBAR -->
@@ -116,7 +116,7 @@
 
   <!-- FOOTER -->
   <!-- AUTH MODAL (UNIFIED LOGINS) -->
-  <div id="auth-modal" class="modal-overlay" style="display:none;">
+  <div id="auth-modal" class="modal-overlay">
     <div class="modal" style="max-width:460px;">
       <div class="modal__header">
         <div style="display:flex;gap:12px;">
@@ -558,11 +558,11 @@
     }
 
     function openAuthModal() {
-      document.getElementById('auth-modal').style.display = 'flex';
+      document.getElementById('auth-modal').classList.add('is-open');
     }
 
     function closeAuthModal() {
-      document.getElementById('auth-modal').style.display = 'none';
+      document.getElementById('auth-modal').classList.remove('is-open');
     }
 
     function switchAuthTab(tab) {

@@ -3,26 +3,157 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Đặt hàng – Handmade Corner</title>
+  <title>Đặt hàng & Thanh toán – Handmade Corner</title>
   <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🧶</text></svg>" />
   <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,600;0,700;1,400&family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" />
-  <link rel="stylesheet" href="css/style.css" />
-  <link rel="stylesheet" href="css/components.css" />
+  <link rel="stylesheet" href="/css/style.css?v=4" />
+  <link rel="stylesheet" href="/css/components.css?v=4" />
+  <style>
+    /* ── QR Payment Specific Styles ───────────────────────── */
+    .qr-card-preview {
+      background: #FFFFFF;
+      border: 1.5px solid #EADBCE;
+      border-radius: var(--radius);
+      padding: 16px;
+      margin-top: 14px;
+      display: flex;
+      gap: 16px;
+      align-items: center;
+    }
+    .vietqr-box {
+      background: #FFFFFF;
+      border-radius: 16px;
+      padding: 24px;
+      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.08);
+      border: 1.5px solid #EADBCE;
+      text-align: center;
+      position: relative;
+      overflow: hidden;
+    }
+    .vietqr-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      border-bottom: 1.5px dashed #EADBCE;
+      padding-bottom: 14px;
+      margin-bottom: 16px;
+    }
+    .vietqr-logos {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+    .qr-badge {
+      background: #005A3C;
+      color: #FFFFFF;
+      font-size: 0.72rem;
+      font-weight: 800;
+      padding: 3px 8px;
+      border-radius: 4px;
+      letter-spacing: 0.5px;
+    }
+    .qr-napas {
+      background: #004B91;
+      color: #FFFFFF;
+      font-size: 0.72rem;
+      font-weight: 800;
+      padding: 3px 8px;
+      border-radius: 4px;
+      letter-spacing: 0.5px;
+    }
+    .qr-image-wrapper {
+      position: relative;
+      display: inline-block;
+      padding: 12px;
+      background: #FFFFFF;
+      border-radius: 12px;
+      border: 2px solid #2B1D14;
+      margin: 10px auto 16px;
+      box-shadow: 0 4px 16px rgba(0,0,0,0.06);
+    }
+    .qr-scan-line {
+      position: absolute;
+      left: 12px;
+      right: 12px;
+      height: 3px;
+      background: linear-gradient(90deg, transparent, #10B981, transparent);
+      box-shadow: 0 0 8px #10B981;
+      animation: qrScan 2.5s ease-in-out infinite;
+      z-index: 10;
+    }
+    @keyframes qrScan {
+      0% { top: 12px; opacity: 0; }
+      20% { opacity: 1; }
+      80% { opacity: 1; }
+      100% { top: calc(100% - 15px); opacity: 0; }
+    }
+    .bank-info-grid {
+      text-align: left;
+      background: #FAF7F4;
+      border-radius: 12px;
+      padding: 16px;
+      margin-top: 14px;
+      border: 1px solid #EADBCE;
+    }
+    .bank-info-row {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 8px 0;
+      border-bottom: 1px solid #F0E6DC;
+      font-size: 0.88rem;
+    }
+    .bank-info-row:last-child {
+      border-bottom: none;
+    }
+    .copy-btn {
+      background: #FFFFFF;
+      border: 1px solid #D5C2B1;
+      color: #8B5E3C;
+      padding: 2px 8px;
+      border-radius: 6px;
+      font-size: 0.75rem;
+      font-weight: 600;
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      gap: 4px;
+      transition: all 0.2s ease;
+    }
+    .copy-btn:hover {
+      background: #8B5E3C;
+      color: #FFFFFF;
+      border-color: #8B5E3C;
+    }
+    .countdown-timer {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      font-size: 0.82rem;
+      color: #D97706;
+      font-weight: 600;
+      background: #FEF3C7;
+      padding: 4px 12px;
+      border-radius: 99px;
+      margin-top: 8px;
+    }
+  </style>
 </head>
 <body>
   <!-- NAVBAR -->
   <nav class="navbar" id="navbar">
     <div class="navbar__inner">
-      <a href="index.html" class="navbar__logo"><span>🧶</span> Handmade Corner</a>
+      <a href="/index.html" class="navbar__logo"><span>🧶</span> Handmade Corner</a>
       <div class="navbar__nav">
-        <a href="index.html">Trang chủ</a>
-        <a href="products.html">Sản phẩm</a>
-        <a href="orders.html">Đơn hàng</a>
+        <a href="/index.html">Trang chủ</a>
+        <a href="/products.html">Sản phẩm</a>
+        <a href="/orders.html">Đơn hàng</a>
       </div>
       <div class="navbar__actions">
-        <a href="cart.html" class="navbar__cart">
+        <a href="/cart.html" class="navbar__cart">
           <i class="fas fa-shopping-bag"></i>
           <span class="cart-badge" id="cart-badge" style="display:none">0</span>
         </a>
@@ -31,18 +162,19 @@
     </div>
   </nav>
   <div class="mobile-nav" id="mobile-nav">
-    <a href="index.html">🏠 Trang chủ</a>
-    <a href="products.html">🛍️ Sản phẩm</a>
-    <a href="cart.html">🛒 Giỏ hàng</a>
+    <a href="/index.html">🏠 Trang chủ</a>
+    <a href="/products.html">🛍️ Sản phẩm</a>
+    <a href="/orders.html">📦 Đơn hàng</a>
+    <a href="/cart.html">🛒 Giỏ hàng</a>
   </div>
 
   <div class="container section">
     <div class="breadcrumb">
-      <a href="index.html">Trang chủ</a>
+      <a href="/index.html">Trang chủ</a>
       <span><i class="fas fa-chevron-right" style="font-size:.7rem;"></i></span>
-      <a href="cart.html">Giỏ hàng</a>
+      <a href="/cart.html">Giỏ hàng</a>
       <span><i class="fas fa-chevron-right" style="font-size:.7rem;"></i></span>
-      <span>Đặt hàng</span>
+      <span>Đặt hàng & Thanh toán</span>
     </div>
 
     <h1 style="font-size:clamp(1.6rem,3vw,2.2rem);margin-bottom:32px;">
@@ -52,8 +184,9 @@
     <!-- Empty cart redirect -->
     <div id="empty-warning" class="empty-state hidden">
       <div class="empty-state__icon">🛒</div>
-      <div class="empty-state__title">Giỏ hàng trống</div>
-      <a href="products.html" class="btn btn-primary mt-16">Mua sắm ngay</a>
+      <div class="empty-state__title">Giỏ hàng của bạn đang trống</div>
+      <p>Hãy chọn những món quà thủ công yêu thích trước khi thanh toán nhé!</p>
+      <a href="/products.html" class="btn btn-primary mt-16">Khám phá sản phẩm ngay</a>
     </div>
 
     <div id="checkout-layout" class="checkout-layout">
@@ -63,7 +196,7 @@
         <div class="card" style="margin-bottom:24px;">
           <div class="card-body">
             <h3 style="font-family:var(--font-heading);margin-bottom:20px;">
-              <i class="fas fa-user" style="color:var(--accent);"></i> Thông tin người nhận
+              <i class="fas fa-user" style="color:var(--accent);"></i> Thông tin người nhận hàng
             </h3>
             <div class="grid-2">
               <div class="form-group">
@@ -76,42 +209,34 @@
               </div>
             </div>
             <div class="form-group">
-              <label class="form-label">Email</label>
+              <label class="form-label">Địa chỉ Email (để nhận hóa đơn)</label>
               <input type="email" id="customer-email" class="form-control" placeholder="email@example.com" />
             </div>
             <div class="form-group">
-              <label class="form-label">Địa chỉ giao hàng <span class="required">*</span></label>
-              <input type="text" id="customer-address" class="form-control" placeholder="Số nhà, tên đường..." />
+              <label class="form-label">Địa chỉ giao hàng chi tiết <span class="required">*</span></label>
+              <input type="text" id="customer-address" class="form-control" placeholder="Số nhà, tên đường, tòa nhà..." />
             </div>
             <div class="grid-3">
               <div class="form-group">
                 <label class="form-label">Tỉnh/Thành phố <span class="required">*</span></label>
                 <select id="customer-city" class="form-control">
                   <option value="">Chọn tỉnh/thành</option>
-                  <option>TP. Hồ Chí Minh</option>
+                  <option selected>TP. Hồ Chí Minh</option>
                   <option>Hà Nội</option>
                   <option>Đà Nẵng</option>
                   <option>Cần Thơ</option>
                   <option>Hải Phòng</option>
-                  <option>An Giang</option>
-                  <option>Bà Rịa – Vũng Tàu</option>
-                  <option>Bắc Giang</option>
-                  <option>Bắc Ninh</option>
                   <option>Bình Dương</option>
-                  <option>Bình Thuận</option>
                   <option>Đồng Nai</option>
-                  <option>Khánh Hòa</option>
+                  <option>Bà Rịa – Vũng Tàu</option>
                   <option>Lâm Đồng</option>
-                  <option>Long An</option>
-                  <option>Nghệ An</option>
-                  <option>Tiền Giang</option>
-                  <option>Thừa Thiên Huế</option>
-                  <option>Tỉnh khác</option>
+                  <option>Khánh Hòa</option>
+                  <option>Tỉnh thành khác</option>
                 </select>
               </div>
               <div class="form-group">
                 <label class="form-label">Quận/Huyện</label>
-                <input type="text" id="customer-district" class="form-control" placeholder="Quận 1..." />
+                <input type="text" id="customer-district" class="form-control" placeholder="Quận 1, Hóc Môn..." />
               </div>
               <div class="form-group">
                 <label class="form-label">Phường/Xã</label>
@@ -119,8 +244,8 @@
               </div>
             </div>
             <div class="form-group mb-0">
-              <label class="form-label">Ghi chú đơn hàng</label>
-              <textarea id="customer-note" class="form-control" placeholder="Ghi chú thêm: màu sắc, kích thước, yêu cầu đặc biệt..." rows="3"></textarea>
+              <label class="form-label">Ghi chú cho xưởng làm đồ</label>
+              <textarea id="customer-note" class="form-control" placeholder="Ghi chú thêm: màu sắc len, thiệp chúc mừng đi kèm, ngày cần nhận..." rows="3"></textarea>
             </div>
           </div>
         </div>
@@ -132,32 +257,40 @@
               <i class="fas fa-wallet" style="color:var(--accent);"></i> Phương thức thanh toán
             </h3>
 
-            <label class="payment-option selected" id="pay-cod" onclick="selectPayment('cod')">
-              <input type="radio" name="payment" value="cod" checked />
+            <!-- Option 1: COD -->
+            <label class="payment-option" id="pay-cod" onclick="selectPayment('cod')">
+              <input type="radio" name="payment" value="cod" />
               <div class="payment-option__icon">💵</div>
               <div class="payment-option__info">
                 <h4>Thanh toán khi nhận hàng (COD)</h4>
-                <p>Trả tiền mặt khi nhận hàng, không phát sinh phí thêm</p>
+                <p>Trả tiền mặt trực tiếp cho shipper khi nhận được kiện hàng</p>
               </div>
             </label>
 
-            <label class="payment-option" id="pay-bank" onclick="selectPayment('bank')">
-              <input type="radio" name="payment" value="bank" />
-              <div class="payment-option__icon">🏦</div>
+            <!-- Option 2: Bank QR Pay (Default) -->
+            <label class="payment-option selected" id="pay-bank" onclick="selectPayment('bank')">
+              <input type="radio" name="payment" value="bank" checked />
+              <div class="payment-option__icon">📲</div>
               <div class="payment-option__info">
-                <h4>Chuyển khoản ngân hàng</h4>
-                <p>Chuyển khoản trước khi giao hàng – xử lý nhanh hơn</p>
+                <div style="display:flex;align-items:center;gap:8px;">
+                  <h4 style="margin:0;">Chuyển khoản ngân hàng (Quét mã VietQR)</h4>
+                  <span style="background:#10B981;color:#fff;font-size:0.7rem;font-weight:700;padding:1px 6px;border-radius:4px;">Khuyên dùng</span>
+                </div>
+                <p>Mở app ngân hàng quét mã QR thanh toán nhanh chóng 24/7</p>
               </div>
             </label>
 
-            <!-- Bank info (shown when bank selected) -->
-            <div id="bank-info" style="display:none;padding:16px;background:var(--bg-section);border-radius:var(--radius);border:1.5px solid var(--border-light);margin-top:8px;">
-              <div style="font-weight:600;margin-bottom:12px;color:var(--accent);">Thông tin chuyển khoản:</div>
-              <div style="display:flex;flex-direction:column;gap:8px;font-size:.88rem;">
-                <div style="display:flex;gap:10px;"><span style="color:var(--text-light);width:120px;">Ngân hàng:</span><strong>Vietcombank</strong></div>
-                <div style="display:flex;gap:10px;"><span style="color:var(--text-light);width:120px;">Số tài khoản:</span><strong>1234567890</strong></div>
-                <div style="display:flex;gap:10px;"><span style="color:var(--text-light);width:120px;">Chủ tài khoản:</span><strong>HANDMADE CORNER</strong></div>
-                <div style="display:flex;gap:10px;"><span style="color:var(--text-light);width:120px;">Nội dung CK:</span><strong id="transfer-content">HANDMADE [Tên của bạn]</strong></div>
+            <!-- Bank info preview -->
+            <div id="bank-info" class="qr-card-preview">
+              <div style="width:70px;height:70px;background:#FAF7F4;border:1px solid #EADBCE;border-radius:8px;display:flex;align-items:center;justify-content:center;flex-shrink:0;">
+                <i class="fas fa-qrcode" style="font-size:2.2rem;color:var(--accent);"></i>
+              </div>
+              <div style="flex:1;">
+                <div style="font-weight:700;color:var(--text-dark);font-size:0.92rem;margin-bottom:2px;">Vietcombank (Ngoại thương Việt Nam)</div>
+                <div style="font-size:0.82rem;color:var(--text-medium);">Số tài khoản: <strong>1029384756</strong> · Chủ TK: <strong>HANDMADE CORNER</strong></div>
+                <div style="font-size:0.78rem;color:#10B981;font-weight:600;margin-top:4px;">
+                  <i class="fas fa-bolt"></i> Mã QR ảo sẽ tự động tạo kèm số tiền và nội dung khi bạn bấm Đặt hàng!
+                </div>
               </div>
             </div>
           </div>
@@ -168,7 +301,7 @@
       <div>
         <div class="order-summary">
           <h3>Đơn hàng của bạn</h3>
-          <div id="order-items-preview" style="max-height:320px;overflow-y:auto;margin-bottom:20px;display:flex;flex-direction:column;gap:12px;">
+          <div id="order-items-preview" style="max-height:340px;overflow-y:auto;margin-bottom:20px;display:flex;flex-direction:column;gap:12px;">
             <!-- Rendered by JS -->
           </div>
           <hr class="order-summary__divider" />
@@ -177,45 +310,156 @@
             <span id="co-subtotal">0đ</span>
           </div>
           <div class="order-summary__row">
-            <span>Phí giao hàng</span>
-            <span style="color:var(--success);">Miễn phí</span>
+            <span>Phí vận chuyển</span>
+            <span style="color:var(--success);font-weight:600;"><i class="fas fa-check"></i> Miễn phí</span>
           </div>
           <div id="gift-row" class="order-summary__row" style="display:none;">
-            <span>Gói quà</span>
+            <span>Hộp quà & Thiệp</span>
             <span>15.000đ</span>
           </div>
           <div class="order-summary__row total">
             <span>Tổng cộng</span>
             <span id="co-total">0đ</span>
           </div>
-          <button class="btn btn-primary btn-full btn-lg mt-24" onclick="placeOrder()" id="place-order-btn">
+          <button class="btn btn-primary btn-full btn-lg mt-24" onclick="handlePlaceOrderClick()" id="place-order-btn">
             <i class="fas fa-check-circle"></i> Đặt hàng ngay
           </button>
           <p style="text-align:center;font-size:.78rem;color:var(--text-light);margin-top:12px;">
-            Bằng cách đặt hàng, bạn đồng ý với điều khoản dịch vụ của chúng tôi
+            Bằng cách đặt hàng, bạn đồng ý với các chính sách & bảo mật của Handmade Corner
           </p>
         </div>
       </div>
     </div>
   </div>
 
-  <!-- SUCCESS MODAL -->
-  <div id="success-modal" class="modal-overlay" style="display:none;">
-    <div class="modal" style="max-width:460px;text-align:center;">
-      <div style="padding:40px 32px;">
-        <div style="font-size:4rem;margin-bottom:16px;" class="animate-bounce">🎉</div>
-        <h2 style="font-family:var(--font-heading);color:var(--accent);margin-bottom:12px;">Đặt hàng thành công!</h2>
-        <p style="color:var(--text-medium);margin-bottom:8px;">Mã đơn hàng của bạn:</p>
-        <div style="background:var(--bg-section);border-radius:var(--radius);padding:16px;margin-bottom:20px;">
-          <div style="font-size:1.3rem;font-weight:800;color:var(--accent);" id="success-order-id">ORD-xxx</div>
+  <!-- ── POPUP 1: QR CODE THANH TOÁN CHUYỂN KHOẢN ─────────── -->
+  <div id="qr-payment-modal" class="modal-overlay">
+    <div class="modal" style="max-width:480px;border-radius:20px;">
+      <div class="modal__header" style="padding-bottom:12px;">
+        <div style="display:flex;align-items:center;gap:8px;">
+          <span style="font-size:1.3rem;">📲</span>
+          <h3 style="font-size:1.15rem;margin:0;">Quét mã QR chuyển khoản</h3>
         </div>
-        <p style="color:var(--text-medium);font-size:.9rem;margin-bottom:28px;">
-          Chúng tôi sẽ liên hệ xác nhận đơn hàng trong vòng <strong>30 phút</strong>.<br/>
-          Lưu mã đơn hàng để theo dõi trạng thái nhé!
+        <button class="modal__close" onclick="closeQrModal()">×</button>
+      </div>
+      <div class="modal__body" style="padding-top:0;">
+        <div class="vietqr-box">
+          <div class="vietqr-header">
+            <div class="vietqr-logos">
+              <span class="qr-badge">VIETQR</span>
+              <span class="qr-napas">Napas 247</span>
+            </div>
+            <div style="font-weight:700;font-size:0.85rem;color:#005A3C;">
+              <i class="fas fa-shield-alt"></i> Thanh toán an toàn
+            </div>
+          </div>
+
+          <div style="font-size:0.85rem;color:#6B5546;">Mở ứng dụng Ngân hàng hoặc Ví điện tử để quét mã:</div>
+
+          <!-- QR Code Frame -->
+          <div class="qr-image-wrapper">
+            <div class="qr-scan-line"></div>
+            <!-- Canvas QR code ảo cực nét -->
+            <canvas id="qr-canvas" width="210" height="210" style="display:block;border-radius:4px;"></canvas>
+          </div>
+
+          <div class="countdown-timer">
+            <i class="fas fa-clock"></i> Đơn hàng chờ thanh toán: <span id="countdown">14:59</span>
+          </div>
+
+          <!-- Bank Details for Manual Transfer -->
+          <div class="bank-info-grid">
+            <div class="bank-info-row">
+              <span style="color:#7D6B5D;">Ngân hàng:</span>
+              <span style="font-weight:700;color:#2B1D14;">Vietcombank (Ngoại thương)</span>
+            </div>
+            <div class="bank-info-row">
+              <span style="color:#7D6B5D;">Chủ tài khoản:</span>
+              <span style="font-weight:700;color:#2B1D14;">NGUYEN THI HANDMADE</span>
+            </div>
+            <div class="bank-info-row">
+              <span style="color:#7D6B5D;">Số tài khoản:</span>
+              <div style="display:flex;align-items:center;gap:6px;">
+                <strong style="color:#2B1D14;font-family:monospace;font-size:1rem;" id="qr-acc-num">1029384756</strong>
+                <button class="copy-btn" onclick="copyText('1029384756', 'Số tài khoản')">
+                  <i class="fas fa-copy"></i> Chép
+                </button>
+              </div>
+            </div>
+            <div class="bank-info-row">
+              <span style="color:#7D6B5D;">Số tiền cần chuyển:</span>
+              <div style="display:flex;align-items:center;gap:6px;">
+                <strong style="color:#8B5E3C;font-size:1.05rem;" id="qr-modal-amount">0 đ</strong>
+                <button class="copy-btn" onclick="copyAmount()">
+                  <i class="fas fa-copy"></i> Chép
+                </button>
+              </div>
+            </div>
+            <div class="bank-info-row">
+              <span style="color:#7D6B5D;">Nội dung CK:</span>
+              <div style="display:flex;align-items:center;gap:6px;">
+                <strong style="color:#2B1D14;font-family:monospace;font-size:0.95rem;" id="qr-modal-memo">HMC KH123</strong>
+                <button class="copy-btn" onclick="copyMemo()">
+                  <i class="fas fa-copy"></i> Chép
+                </button>
+              </div>
+            </div>
+          </div>
+
+          <div style="margin-top:20px;display:flex;flex-direction:column;gap:10px;">
+            <button class="btn btn-primary btn-full btn-lg" onclick="confirmPaymentSuccess()" id="btn-confirm-paid">
+              <i class="fas fa-check-circle"></i> Tôi đã chuyển khoản thành công
+            </button>
+            <button class="btn btn-ghost btn-sm" onclick="closeQrModal()">
+              Quay lại chọn phương thức khác
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ── POPUP 2: XÁC NHẬN ĐÃ THANH TOÁN & ĐẶT HÀNG THÀNH CÔNG ── -->
+  <div id="success-modal" class="modal-overlay">
+    <div class="modal" style="max-width:480px;text-align:center;border-radius:20px;">
+      <div style="padding:40px 28px;">
+        <div style="width:76px;height:76px;background:#D1FAE5;border-radius:50%;display:flex;align-items:center;justify-content:center;margin:0 auto 20px;color:#065F46;font-size:2.2rem;box-shadow:0 6px 20px rgba(16,185,129,0.25);">
+          <i class="fas fa-check"></i>
+        </div>
+        <h2 style="font-family:var(--font-heading);color:#2B1D14;margin-bottom:8px;font-size:1.6rem;" id="success-title">
+          Xác nhận thanh toán thành công!
+        </h2>
+        <p style="color:#7D6B5D;font-size:0.92rem;margin-bottom:20px;" id="success-subtitle">
+          Cảm ơn bạn! Đơn hàng đã được hệ thống ghi nhận và đang chuẩn bị đóng gói.
         </p>
+
+        <!-- Receipt Box -->
+        <div style="background:#FAF7F4;border-radius:14px;padding:18px 20px;margin-bottom:24px;border:1px solid #EADBCE;text-align:left;">
+          <div style="display:flex;justify-content:space-between;padding-bottom:10px;border-bottom:1px dashed #EADBCE;margin-bottom:10px;">
+            <span style="color:#7D6B5D;font-size:0.85rem;">Mã đơn hàng:</span>
+            <strong style="color:#8B5E3C;font-family:monospace;font-size:1rem;" id="success-order-id">ORD-xxx</strong>
+          </div>
+          <div style="display:flex;justify-content:space-between;padding-bottom:10px;border-bottom:1px dashed #EADBCE;margin-bottom:10px;">
+            <span style="color:#7D6B5D;font-size:0.85rem;">Số tiền thanh toán:</span>
+            <strong style="color:#2B1D14;font-size:1rem;" id="success-amount">0 đ</strong>
+          </div>
+          <div style="display:flex;justify-content:space-between;padding-bottom:10px;border-bottom:1px dashed #EADBCE;margin-bottom:10px;">
+            <span style="color:#7D6B5D;font-size:0.85rem;">Phương thức:</span>
+            <span style="font-weight:600;color:#2B1D14;font-size:0.88rem;" id="success-payment-method">Chuyển khoản QR Pay</span>
+          </div>
+          <div style="display:flex;justify-content:space-between;">
+            <span style="color:#7D6B5D;font-size:0.85rem;">Trạng thái đơn:</span>
+            <span class="badge badge-confirmed" id="success-status-badge"><i class="fas fa-check-circle"></i> Đã xác nhận</span>
+          </div>
+        </div>
+
         <div style="display:flex;gap:12px;justify-content:center;flex-wrap:wrap;">
-          <a href="orders.html" class="btn btn-primary">Theo dõi đơn hàng</a>
-          <a href="products.html" class="btn btn-outline">Tiếp tục mua sắm</a>
+          <a href="/orders.html" class="btn btn-primary" style="flex:1;">
+            <i class="fas fa-box"></i> Theo dõi đơn hàng
+          </a>
+          <a href="/products.html" class="btn btn-outline" style="flex:1;">
+            Tiếp tục mua hàng
+          </a>
         </div>
       </div>
     </div>
@@ -223,26 +467,37 @@
 
   <!-- FOOTER -->
   <footer class="footer">
-    <div class="footer__bottom"><div class="container">© 2026 Handmade Corner. Made with 💕</div></div>
+    <div class="footer__bottom">
+      <div class="container">© 2026 Handmade Corner. Được làm với 💕 tại Việt Nam.</div>
+    </div>
   </footer>
+
   <div id="toast-container"></div>
 
-  <script src="js/store.js"></script>
+  <script src="/js/store.js"></script>
   <script>
-    let selectedPayment = 'cod';
+    let selectedPayment = 'bank'; // Default to QR Bank Transfer as requested
+    let currentOrderTotal = 0;
+    let countdownInterval = null;
     const urlParams = new URLSearchParams(window.location.search);
     const hasGiftWrap = urlParams.get('gift') === '1';
 
-    // Navbar
-    window.addEventListener('scroll', () =>
-      document.getElementById('navbar').classList.toggle('scrolled', window.scrollY > 20));
+    // ── Navbar ─────────────────────────────────────────────────
+    window.addEventListener('scroll', () => {
+      document.getElementById('navbar').classList.toggle('scrolled', window.scrollY > 20);
+    });
     document.getElementById('hamburger').addEventListener('click', () => {
       document.getElementById('hamburger').classList.toggle('open');
       document.getElementById('mobile-nav').classList.toggle('open');
     });
+
     function updateCartBadge() {
-      const n = Store.getCartCount(), b = document.getElementById('cart-badge');
-      b.textContent = n; b.style.display = n > 0 ? 'flex' : 'none';
+      const n = Store.getCartCount();
+      const b = document.getElementById('cart-badge');
+      if (b) {
+        b.textContent = n;
+        b.style.display = n > 0 ? 'flex' : 'none';
+      }
     }
 
     function showToast(msg, type = 'success') {
@@ -252,6 +507,12 @@
       t.innerHTML = `<i class="fas fa-${type==='success'?'check-circle':'times-circle'}"></i> ${msg}`;
       tc.appendChild(t);
       setTimeout(() => t.remove(), 3200);
+    }
+
+    function formatImgUrl(img) {
+      if (!img) return '/images/hero-main.png';
+      if (img.startsWith('http')) return img;
+      return '/' + img.replace(/^\.?\/?/, '');
     }
 
     // ── Check cart ─────────────────────────────────────────────
@@ -274,21 +535,22 @@
       preview.innerHTML = cart.map(item => {
         const p = productsList.find(x => x.id === item.productId);
         if (!p) return '';
+        const img = formatImgUrl(p.images && p.images[0] ? p.images[0] : '');
         return `
           <div style="display:flex;gap:12px;align-items:center;">
-            <img src="${p.images[0]}" style="width:52px;height:52px;border-radius:var(--radius-sm);object-fit:cover;" />
+            <img src="${img}" style="width:50px;height:50px;border-radius:8px;object-fit:cover;border:1px solid #EADBCE;" onerror="this.src='/images/hero-main.png'" />
             <div style="flex:1;">
-              <div style="font-size:.88rem;font-weight:600;color:var(--text-dark);">${p.name}</div>
-              <div style="font-size:.78rem;color:var(--text-light);">x${item.quantity}</div>
+              <div style="font-size:0.88rem;font-weight:700;color:#2B1D14;">${p.name}</div>
+              <div style="font-size:0.78rem;color:#7D6B5D;">x${item.quantity} · ${Store.formatPrice(p.price)}</div>
             </div>
-            <div style="font-weight:700;color:var(--accent);font-size:.9rem;">${Store.formatPrice(p.price * item.quantity)}</div>
+            <div style="font-weight:700;color:#8B5E3C;font-size:0.92rem;">${Store.formatPrice(p.price * item.quantity)}</div>
           </div>`;
       }).join('');
 
       const subtotal = Store.getCartTotal(productsList);
-      const total    = subtotal + (hasGiftWrap ? 15000 : 0);
+      currentOrderTotal = subtotal + (hasGiftWrap ? 15000 : 0);
       document.getElementById('co-subtotal').textContent = Store.formatPrice(subtotal);
-      document.getElementById('co-total').textContent    = Store.formatPrice(total);
+      document.getElementById('co-total').textContent    = Store.formatPrice(currentOrderTotal);
       if (hasGiftWrap) document.getElementById('gift-row').style.display = 'flex';
     }
 
@@ -297,42 +559,195 @@
       selectedPayment = method;
       document.getElementById('pay-cod').classList.toggle('selected', method === 'cod');
       document.getElementById('pay-bank').classList.toggle('selected', method === 'bank');
-      document.getElementById('bank-info').style.display = method === 'bank' ? 'block' : 'none';
+      document.getElementById('bank-info').style.display = method === 'bank' ? 'flex' : 'none';
+      
+      const btn = document.getElementById('place-order-btn');
       if (method === 'bank') {
-        const name = document.getElementById('customer-name').value || 'TÊN CỦA BẠN';
-        document.getElementById('transfer-content').textContent = `HANDMADE ${name.toUpperCase()}`;
+        btn.innerHTML = '<i class="fas fa-qrcode"></i> Quét mã QR thanh toán ngay';
+      } else {
+        btn.innerHTML = '<i class="fas fa-check-circle"></i> Đặt hàng ngay (COD)';
       }
     }
-    document.getElementById('customer-name').addEventListener('input', () => {
-      if (selectedPayment === 'bank') {
-        const name = document.getElementById('customer-name').value || 'TÊN CỦA BẠN';
-        document.getElementById('transfer-content').textContent = `HANDMADE ${name.toUpperCase()}`;
-      }
-    });
 
-    // ── Validate ───────────────────────────────────────────────
+    // ── Copy Helpers ───────────────────────────────────────────
+    function copyText(val, label) {
+      navigator.clipboard.writeText(val).then(() => {
+        showToast(`Đã sao chép ${label}: ${val}`);
+      });
+    }
+
+    function copyAmount() {
+      copyText(currentOrderTotal.toString(), 'Số tiền');
+    }
+
+    function copyMemo() {
+      const memo = document.getElementById('qr-modal-memo').textContent;
+      copyText(memo, 'Nội dung chuyển khoản');
+    }
+
+    // ── Generate QR Code Pattern onto Canvas ───────────────────
+    function drawRealisticVietQR(canvas, text, amount) {
+      const ctx = canvas.getContext('2d');
+      const size = canvas.width;
+      ctx.fillStyle = '#FFFFFF';
+      ctx.fillRect(0, 0, size, size);
+
+      // Simple QR Code generation with 3 position detection patterns
+      const margin = 14;
+      const cellSize = (size - margin * 2) / 29;
+
+      function drawFinder(x, y) {
+        // Outer black 7x7
+        ctx.fillStyle = '#111827';
+        ctx.fillRect(margin + x * cellSize, margin + y * cellSize, 7 * cellSize, 7 * cellSize);
+        // Inner white 5x5
+        ctx.fillStyle = '#FFFFFF';
+        ctx.fillRect(margin + (x + 1) * cellSize, margin + (y + 1) * cellSize, 5 * cellSize, 5 * cellSize);
+        // Center black 3x3
+        ctx.fillStyle = '#005A3C'; // Vietcombank green tone
+        ctx.fillRect(margin + (x + 2) * cellSize, margin + (y + 2) * cellSize, 3 * cellSize, 3 * cellSize);
+      }
+
+      drawFinder(0, 0);
+      drawFinder(22, 0);
+      drawFinder(0, 22);
+
+      // Pseudo-random data modules based on input hash
+      let seed = 0;
+      for (let i = 0; i < text.length; i++) seed += text.charCodeAt(i) * (i + 1);
+      seed += amount;
+
+      function pseudoRand() {
+        seed = (seed * 9301 + 49297) % 233280;
+        return seed / 233280;
+      }
+
+      ctx.fillStyle = '#111827';
+      for (let r = 0; r < 29; r++) {
+        for (let c = 0; c < 29; c++) {
+          // Avoid finder patterns
+          if ((r < 8 && c < 8) || (r < 8 && c >= 21) || (r >= 21 && c < 8)) continue;
+          // Avoid center logo space
+          if (r >= 11 && r <= 17 && c >= 11 && c <= 17) continue;
+
+          if (pseudoRand() > 0.48) {
+            ctx.fillRect(
+              margin + c * cellSize + 0.5,
+              margin + r * cellSize + 0.5,
+              cellSize - 1,
+              cellSize - 1
+            );
+          }
+        }
+      }
+
+      // Center VietQR logo badge
+      const logoBoxSize = 7 * cellSize;
+      const logoX = margin + 11 * cellSize;
+      const logoY = margin + 11 * cellSize;
+      ctx.fillStyle = '#FFFFFF';
+      ctx.shadowColor = 'rgba(0,0,0,0.15)';
+      ctx.shadowBlur = 6;
+      ctx.fillRect(logoX, logoY, logoBoxSize, logoBoxSize);
+      ctx.shadowBlur = 0;
+
+      ctx.fillStyle = '#005A3C';
+      ctx.fillRect(logoX + 2, logoY + 2, logoBoxSize - 4, logoBoxSize - 4);
+      
+      ctx.fillStyle = '#FFFFFF';
+      ctx.font = 'bold 13px Inter, sans-serif';
+      ctx.textAlign = 'center';
+      ctx.textBaseline = 'middle';
+      ctx.fillText('VCB', logoX + logoBoxSize / 2, logoY + logoBoxSize / 2);
+    }
+
+    // ── Open / Close QR Modal ──────────────────────────────────
+    function openQrModal() {
+      const name = (document.getElementById('customer-name').value || 'KHACH').trim();
+      const cleanName = name.normalize("NFD").replace(/[\u0300-\u036f]/g, "").replace(/[^a-zA-Z0-9]/g, "").toUpperCase();
+      const randomCode = Math.floor(1000 + Math.random() * 9000);
+      const memo = `HMC ${cleanName.slice(0, 10)} ${randomCode}`;
+
+      document.getElementById('qr-modal-amount').textContent = Store.formatPrice(currentOrderTotal);
+      document.getElementById('qr-modal-memo').textContent = memo;
+
+      // Draw virtual QR Code
+      const canvas = document.getElementById('qr-canvas');
+      drawRealisticVietQR(canvas, memo, currentOrderTotal);
+
+      // Start Countdown Timer (15 minutes)
+      let secondsLeft = 15 * 60;
+      const cdEl = document.getElementById('countdown');
+      if (countdownInterval) clearInterval(countdownInterval);
+      countdownInterval = setInterval(() => {
+        secondsLeft--;
+        if (secondsLeft <= 0) {
+          clearInterval(countdownInterval);
+          cdEl.textContent = 'Hết hạn';
+          return;
+        }
+        const m = Math.floor(secondsLeft / 60).toString().padStart(2, '0');
+        const s = (secondsLeft % 60).toString().padStart(2, '0');
+        cdEl.textContent = `${m}:${s}`;
+      }, 1000);
+
+      document.getElementById('qr-payment-modal').classList.add('is-open');
+    }
+
+    function closeQrModal() {
+      document.getElementById('qr-payment-modal').classList.remove('is-open');
+      if (countdownInterval) clearInterval(countdownInterval);
+    }
+
+    // ── Validate Form ──────────────────────────────────────────
     function validate() {
       const name    = document.getElementById('customer-name').value.trim();
       const phone   = document.getElementById('customer-phone').value.trim();
       const address = document.getElementById('customer-address').value.trim();
       const city    = document.getElementById('customer-city').value;
-      if (!name)    { showToast('Nhập họ và tên!', 'error');      document.getElementById('customer-name').focus();    return false; }
-      if (!phone)   { showToast('Nhập số điện thoại!', 'error');  document.getElementById('customer-phone').focus();   return false; }
+
+      if (!name)    { showToast('Vui lòng nhập họ và tên!', 'error');     document.getElementById('customer-name').focus();    return false; }
+      if (!phone)   { showToast('Vui lòng nhập số điện thoại!', 'error'); document.getElementById('customer-phone').focus();   return false; }
       if (!/^(0|\+84)\d{8,10}$/.test(phone.replace(/\s/g,''))) {
-        showToast('Số điện thoại không hợp lệ!', 'error'); document.getElementById('customer-phone').focus(); return false;
+        showToast('Số điện thoại không đúng định dạng!', 'error'); document.getElementById('customer-phone').focus(); return false;
       }
-      if (!address) { showToast('Nhập địa chỉ giao hàng!', 'error'); document.getElementById('customer-address').focus(); return false; }
-      if (!city)    { showToast('Chọn tỉnh/thành phố!', 'error');    document.getElementById('customer-city').focus();    return false; }
+      if (!address) { showToast('Vui lòng nhập địa chỉ giao hàng!', 'error'); document.getElementById('customer-address').focus(); return false; }
+      if (!city)    { showToast('Vui lòng chọn tỉnh/thành phố!', 'error');   document.getElementById('customer-city').focus();    return false; }
       return true;
     }
 
-    // ── Place Order ────────────────────────────────────────────
-    async function placeOrder() {
+    // ── Action Button Handler ──────────────────────────────────
+    async function handlePlaceOrderClick() {
       if (!validate()) return;
 
+      if (selectedPayment === 'bank') {
+        openQrModal();
+      } else {
+        // COD Direct Order
+        await executeCreateOrder('Thanh toán khi nhận hàng (COD)');
+      }
+    }
+
+    // ── Confirm Paid in QR Modal ───────────────────────────────
+    async function confirmPaymentSuccess() {
+      const btn = document.getElementById('btn-confirm-paid');
+      btn.disabled = true;
+      btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Đang đối soát với ngân hàng...';
+
+      // Simulate verification delay (1.2s)
+      setTimeout(async () => {
+        closeQrModal();
+        btn.disabled = false;
+        btn.innerHTML = '<i class="fas fa-check-circle"></i> Tôi đã chuyển khoản thành công';
+        await executeCreateOrder('Chuyển khoản QR Pay (Vietcombank)');
+      }, 1200);
+    }
+
+    // ── Create Order in DB & Show Success Modal ────────────────
+    async function executeCreateOrder(paymentMethodName) {
       const btn = document.getElementById('place-order-btn');
       btn.disabled = true;
-      btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Đang xử lý...';
+      btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Đang hoàn tất đơn hàng...';
 
       const customerInfo = {
         name:     document.getElementById('customer-name').value.trim(),
@@ -347,27 +762,40 @@
       };
 
       const cart = Store.getCart();
-      const paymentLabels = { cod: 'Thanh toán khi nhận hàng (COD)', bank: 'Chuyển khoản ngân hàng' };
-
-      const result = await Store.createOrder(customerInfo, cart, paymentLabels[selectedPayment]);
+      const result = await Store.createOrder(customerInfo, cart, paymentMethodName);
+      
       btn.disabled = false;
-      btn.innerHTML = '<i class="fas fa-check-circle"></i> Đặt hàng ngay';
+      selectPayment(selectedPayment); // Reset button label
 
       if (result.success) {
         document.getElementById('success-order-id').textContent = result.orderId;
-        document.getElementById('success-modal').style.display = 'flex';
+        document.getElementById('success-amount').textContent = Store.formatPrice(currentOrderTotal);
+        document.getElementById('success-payment-method').textContent = paymentMethodName;
+        
+        if (paymentMethodName.includes('QR')) {
+          document.getElementById('success-title').textContent = 'Xác nhận thanh toán thành công!';
+          document.getElementById('success-subtitle').textContent = 'Giao dịch chuyển khoản QR đã được xác nhận. Chúng tôi sẽ đóng gói và giao hàng sớm nhất!';
+          document.getElementById('success-status-badge').innerHTML = '<i class="fas fa-check-circle"></i> Đã thanh toán';
+        } else {
+          document.getElementById('success-title').textContent = 'Đặt hàng thành công!';
+          document.getElementById('success-subtitle').textContent = 'Đơn hàng COD của bạn đã được ghi nhận. Shipper sẽ liên hệ trước khi giao hàng.';
+          document.getElementById('success-status-badge').innerHTML = '<i class="fas fa-clock"></i> Chờ xác nhận COD';
+        }
+
+        document.getElementById('success-modal').classList.add('is-open');
         updateCartBadge();
       } else {
-        showToast(result.message, 'error');
+        showToast(result.message || 'Không thể tạo đơn hàng!', 'error');
       }
     }
 
-    // ── Init ──────────────────────────────────────────────────
+    // ── Init ───────────────────────────────────────────────────
     async function initPage() {
       await Store.init();
       updateCartBadge();
+      selectPayment('bank'); // Default to QR code transfer
       
-      // Auto pre-fill if customer is logged in
+      // Auto pre-fill if logged in
       const user = Store.getCurrentUser();
       if (user) {
         if (user.name) document.getElementById('customer-name').value = user.name;
@@ -377,7 +805,9 @@
         if (user.city) document.getElementById('customer-city').value = user.city;
       }
 
-      if (checkCart()) { await renderOrderPreview(); }
+      if (checkCart()) {
+        await renderOrderPreview();
+      }
     }
 
     initPage();

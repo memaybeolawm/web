@@ -255,10 +255,11 @@ select.form-control { appearance: none; background-image: url("data:image/svg+xm
   color: var(--accent); display: flex; align-items: center; gap: 8px;
 }
 .navbar__logo span { font-size: 1.5rem; }
-.navbar__nav { display: flex; align-items: center; gap: 8px; }
+.navbar__nav { display: flex; align-items: center; gap: 8px; position: relative; z-index: 1001; }
 .navbar__nav a {
   padding: 8px 16px; border-radius: var(--radius-full); font-size: .9rem;
   font-weight: 500; color: var(--text-medium); transition: all var(--transition);
+  position: relative; z-index: 1001;
 }
 .navbar__nav a:hover, .navbar__nav a.active {
   background: var(--primary-light); color: var(--accent);
@@ -415,8 +416,12 @@ select.form-control { appearance: none; background-image: url("data:image/svg+xm
 /* ── Modal ────────────────────────────────────────────────── */
 .modal-overlay {
   position: fixed; inset: 0; background: rgba(0,0,0,.5);
-  z-index: 2000; display: flex; align-items: center; justify-content: center;
-  padding: 20px; animation: fadeIn .2s ease;
+  z-index: 2000; display: none; align-items: center; justify-content: center;
+  padding: 20px; pointer-events: none; visibility: hidden;
+}
+.modal-overlay.is-open {
+  display: flex; animation: fadeIn .2s ease;
+  pointer-events: auto; visibility: visible;
 }
 .modal {
   background: var(--bg-card); border-radius: var(--radius-lg);

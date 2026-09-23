@@ -1,0 +1,43 @@
+services:
+  app:
+    image: node:20-alpine
+    container_name: apex-gear-app
+    working_dir: /app
+    command: sh -c "npm install && npm start"
+    ports:
+      - "5001:5000"
+    environment:
+      PORT: 5000
+      DB_HOST: postgres
+      DB_PORT: 5432
+      DB_NAME: apex_gear
+      DB_USER: apex_user
+      DB_PASSWORD: apex_password
+    volumes:
+      - .:/app
+      - /app/node_modules
+    depends_on:
+      postgres:
+        condition: service_healthy
+    restart: unless-stopped
+
+  postgres:
+    image: postgres:16-alpine
+    container_name: apex-gear-postgres
+    ports:
+      - "5432:5432"
+    environment:
+      POSTGRES_DB: apex_gear
+      POSTGRES_USER: apex_user
+      POSTGRES_PASSWORD: apex_password
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U apex_user -d apex_gear"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+    restart: unless-stopped
+
+volumes:
+  postgres_data:

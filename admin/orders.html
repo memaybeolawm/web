@@ -6,31 +6,50 @@
   <title>Quản lý đơn hàng – Admin Handmade Corner</title>
   <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🧶</text></svg>" />
   <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,600;0,700;1,400&family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" />
-  <link rel="stylesheet" href="../css/style.css" />
-  <link rel="stylesheet" href="../css/components.css" />
-  <link rel="stylesheet" href="../css/admin.css" />
+  <link rel="stylesheet" href="/css/style.css?v=4" />
+  <link rel="stylesheet" href="/css/components.css?v=4" />
+  <link rel="stylesheet" href="/css/admin.css?v=4" />
 </head>
 <body>
   <div class="admin-layout">
     <!-- SIDEBAR -->
     <aside class="admin-sidebar">
       <div class="admin-sidebar__brand">
-        <span>🧶</span><h2>Handmade Corner</h2>
+        <span>🧶</span>
+        <h2>Handmade Corner</h2>
         <span class="admin-sidebar__badge">Admin</span>
       </div>
       <nav class="admin-sidebar__nav">
         <div class="admin-nav__section">
           <div class="admin-nav__section-title">Tổng quan</div>
-          <a href="index.html" class="admin-nav__item"><i class="fas fa-tachometer-alt"></i> Dashboard</a>
-          <a href="../index.html" class="admin-nav__item" target="_blank"><i class="fas fa-external-link-alt"></i> Xem website</a>
+          <a href="/admin/index.html" class="admin-nav__item">
+            <i class="fas fa-tachometer-alt"></i> Dashboard
+          </a>
+          <a href="/index.html" class="admin-nav__item" target="_blank">
+            <i class="fas fa-external-link-alt"></i> Xem website
+          </a>
         </div>
         <div class="admin-nav__section">
           <div class="admin-nav__section-title">Quản lý</div>
-          <a href="products.html" class="admin-nav__item"><i class="fas fa-box-open"></i> Sản phẩm</a>
-          <a href="orders.html" class="admin-nav__item active"><i class="fas fa-shopping-cart"></i> Đơn hàng</a>
-          <a href="reviews.html" class="admin-nav__item"><i class="fas fa-star"></i> Đánh giá</a>
+          <a href="/admin/products.html" class="admin-nav__item">
+            <i class="fas fa-box-open"></i> Sản phẩm
+          </a>
+          <a href="/admin/orders.html" class="admin-nav__item active">
+            <i class="fas fa-shopping-cart"></i> Đơn hàng
+            <span class="admin-nav__badge" id="pending-count">0</span>
+          </a>
+          <a href="/admin/reviews.html" class="admin-nav__item">
+            <i class="fas fa-star"></i> Đánh giá
+          </a>
+        </div>
+        <div class="admin-nav__section">
+          <div class="admin-nav__section-title">Hệ thống</div>
+          <a href="/admin/index.html" class="admin-nav__item">
+            <i class="fas fa-cog"></i> Cài đặt hệ thống
+          </a>
         </div>
       </nav>
     </aside>
@@ -38,10 +57,15 @@
     <!-- MAIN -->
     <main class="admin-main">
       <div class="admin-topbar">
-        <div class="admin-topbar__title">Quản lý đơn hàng (SQLite DB)</div>
+        <div class="admin-topbar__title">
+          <i class="fas fa-shopping-cart" style="color:var(--admin-sidebar-active);"></i> Quản lý đơn hàng (SQLite Database)
+        </div>
         <div class="admin-topbar__actions">
-          <div class="admin-topbar__user"><div class="admin-topbar__avatar">A</div> <span id="admin-name">Admin</span></div>
-          <button class="btn btn-ghost btn-sm" onclick="handleAdminLogout()" title="Đăng xuất Admin">
+          <div class="admin-topbar__user">
+            <div class="admin-topbar__avatar">A</div>
+            <span id="admin-name">Admin</span>
+          </div>
+          <button class="btn btn-outline btn-sm" onclick="handleAdminLogout()" title="Đăng xuất">
             <i class="fas fa-sign-out-alt"></i> Đăng xuất
           </button>
         </div>
@@ -50,19 +74,19 @@
       <div class="admin-content">
         <div class="admin-page-header">
           <div>
-            <h2>Đơn hàng</h2>
+            <h2>Danh sách đơn hàng</h2>
             <p id="order-count">Đang tải...</p>
           </div>
         </div>
 
         <!-- STATS ROW -->
-        <div class="stats-grid" style="grid-template-columns:repeat(6,1fr);margin-bottom:28px;" id="order-stats">
+        <div class="stats-grid" id="order-stats">
           <!-- Rendered by JS -->
         </div>
 
-        <!-- FILTERS -->
-        <div style="display:flex;flex-wrap:wrap;gap:10px;margin-bottom:20px;" id="status-tabs">
-          <button class="category-chip active" onclick="filterStatus('all')">Tất cả</button>
+        <!-- STATUS CHIPS FILTER -->
+        <div class="category-chip-container" id="status-tabs">
+          <button class="category-chip active" onclick="filterStatus('all')">Tất cả đơn</button>
           <button class="category-chip" onclick="filterStatus('pending')">⏳ Chờ xác nhận</button>
           <button class="category-chip" onclick="filterStatus('confirmed')">✅ Đã xác nhận</button>
           <button class="category-chip" onclick="filterStatus('preparing')">📦 Đang chuẩn bị</button>
@@ -74,29 +98,29 @@
         <!-- TABLE CONTROLS -->
         <div class="table-controls">
           <div class="table-search">
-            <input type="text" id="search-input" placeholder="Tìm theo mã đơn, tên KH..." oninput="applyFilters()" />
+            <input type="text" id="search-input" placeholder="Tìm theo mã đơn, tên hoặc SĐT..." oninput="applyFilters()" />
             <button><i class="fas fa-search"></i></button>
           </div>
-          <div style="font-size:.85rem;color:var(--text-light);" id="result-count">0 đơn hàng</div>
+          <div style="font-size:0.9rem;font-weight:600;color:#7D6B5D;" id="result-count">0 đơn hàng</div>
         </div>
 
-        <!-- TABLE -->
+        <!-- TABLE WRAP -->
         <div class="table-wrap">
           <table>
             <thead>
               <tr>
-                <th>Mã đơn</th>
+                <th style="width:140px;">Mã đơn</th>
                 <th>Khách hàng</th>
                 <th>Sản phẩm</th>
-                <th>Tổng tiền</th>
-                <th>Thanh toán</th>
+                <th>Tổng thanh toán</th>
+                <th>Phương thức</th>
                 <th>Trạng thái</th>
-                <th>Thời gian</th>
-                <th style="width:180px;">Thao tác</th>
+                <th>Thời gian đặt</th>
+                <th style="width:160px;text-align:center;">Thao tác</th>
               </tr>
             </thead>
             <tbody id="order-table-body">
-              <tr><td colspan="8" style="text-align:center;padding:40px;color:var(--text-light);">Đang tải...</td></tr>
+              <tr><td colspan="8" style="text-align:center;padding:40px;color:var(--text-light);">Đang tải dữ liệu đơn hàng...</td></tr>
             </tbody>
           </table>
         </div>
@@ -105,8 +129,8 @@
   </div>
 
   <!-- ORDER DETAIL MODAL -->
-  <div id="order-detail-modal" class="modal-overlay" style="display:none;">
-    <div class="modal" style="max-width:640px;">
+  <div id="order-detail-modal" class="modal-overlay">
+    <div class="modal" style="max-width:680px;max-height:90vh;">
       <div class="modal__header">
         <h3 id="detail-modal-title">Chi tiết đơn hàng</h3>
         <button class="modal__close" onclick="closeDetailModal()">×</button>
@@ -115,14 +139,14 @@
         <!-- Rendered by JS -->
       </div>
       <div class="modal__footer">
-        <button class="btn btn-ghost" onclick="closeDetailModal()">Đóng</button>
+        <button class="btn btn-outline" onclick="closeDetailModal()">Đóng</button>
       </div>
     </div>
   </div>
 
   <div id="toast-container"></div>
 
-  <script src="../js/store.js"></script>
+  <script src="/js/store.js"></script>
   <script>
     let currentStatus = 'all';
 
@@ -135,6 +159,12 @@
       setTimeout(() => t.remove(), 3200);
     }
 
+    function formatImgUrl(img) {
+      if (!img) return '/images/hero-main.png';
+      if (img.startsWith('http')) return img;
+      return '/' + img.replace(/^\.?\/?/, '');
+    }
+
     const STATUS_INFO  = Store.ORDER_STATUSES;
     const STATUS_FLOW  = ['pending','confirmed','preparing','shipping','completed'];
 
@@ -142,12 +172,17 @@
       const orders = await Store.getOrders();
       const statuses = ['pending','confirmed','preparing','shipping','completed','cancelled'];
       const colors   = ['#F59E0B','#3B82F6','#8B5CF6','#EC4899','#10B981','#EF4444'];
+      
+      const pendingCount = orders.filter(o => o.status === 'pending').length;
+      const pendingBadge = document.getElementById('pending-count');
+      if (pendingBadge) pendingBadge.textContent = pendingCount;
+
       document.getElementById('order-stats').innerHTML = statuses.map((s, i) => {
         const count = orders.filter(o => o.status === s).length;
         const info  = STATUS_INFO[s.toUpperCase()] || {};
         return `
           <div class="stat-card" style="border-left-color:${colors[i]};cursor:pointer;" onclick="filterStatus('${s}')">
-            <div class="stat-card__icon" style="background:${colors[i]}20;font-size:1.2rem;">${info.icon||'📦'}</div>
+            <div class="stat-card__icon" style="background:${colors[i]}18;font-size:1.3rem;">${info.icon||'📦'}</div>
             <div>
               <div class="stat-card__value" style="color:${colors[i]};font-size:1.4rem;">${count}</div>
               <div class="stat-card__label">${info.label||s}</div>
@@ -166,23 +201,23 @@
     }
 
     async function applyFilters() {
-      const search = document.getElementById('search-input').value.toLowerCase();
+      const search = (document.getElementById('search-input').value || '').toLowerCase();
       const orders = await Store.getOrders({ status: currentStatus, q: search });
       renderTable(orders);
     }
 
-    function getNextStatus(currentStatus) {
-      const idx = STATUS_FLOW.indexOf(currentStatus);
+    function getNextStatus(st) {
+      const idx = STATUS_FLOW.indexOf(st);
       return idx >= 0 && idx < STATUS_FLOW.length - 1 ? STATUS_FLOW[idx+1] : null;
     }
 
     function renderTable(orders) {
       document.getElementById('result-count').textContent = `${orders.length} đơn hàng`;
-      document.getElementById('order-count').textContent = `Hiển thị ${orders.length} đơn hàng`;
+      document.getElementById('order-count').textContent = `Hiển thị ${orders.length} đơn hàng trong hệ thống`;
 
       if (orders.length === 0) {
         document.getElementById('order-table-body').innerHTML =
-          '<tr><td colspan="8" style="text-align:center;padding:40px;color:var(--text-light);">Không có đơn hàng nào</td></tr>';
+          '<tr><td colspan="8" style="text-align:center;padding:40px;color:var(--text-light);">Không tìm thấy đơn hàng nào</td></tr>';
         return;
       }
 
@@ -195,35 +230,35 @@
         return `
           <tr>
             <td>
-              <div style="font-weight:700;color:var(--accent);font-size:.85rem;">${order.id}</div>
-              <div style="font-size:.72rem;color:var(--text-light);">${order.items.length} sản phẩm</div>
+              <div style="font-weight:700;color:#8B5E3C;font-size:0.88rem;font-family:monospace;">${order.id}</div>
+              <div style="font-size:0.75rem;color:#7D6B5D;">${order.items.length} mặt hàng</div>
             </td>
             <td>
-              <div style="font-weight:600;">${order.customer.name}</div>
-              <div style="font-size:.78rem;color:var(--text-medium);">${order.customer.phone}</div>
-              <div style="font-size:.75rem;color:var(--text-light);max-width:160px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;">${order.customer.city}</div>
+              <div style="font-weight:700;color:#2B1D14;">${order.customer ? order.customer.name : 'Khách vãng lai'}</div>
+              <div style="font-size:0.8rem;color:#6B5546;">${order.customer ? order.customer.phone : '–'}</div>
+              <div style="font-size:0.75rem;color:#7D6B5D;max-width:180px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;">${order.customer ? order.customer.city || order.customer.address : ''}</div>
             </td>
             <td>
-              <div style="display:flex;gap:4px;">
-                ${order.items.slice(0,3).map(i => `<img src="${i.productImage}" style="width:32px;height:32px;border-radius:4px;object-fit:cover;" title="${i.productName}" />`).join('')}
-                ${order.items.length > 3 ? `<div style="width:32px;height:32px;border-radius:4px;background:var(--bg-section);display:flex;align-items:center;justify-content:center;font-size:.72rem;color:var(--text-light);">+${order.items.length-3}</div>` : ''}
+              <div style="display:flex;gap:5px;align-items:center;">
+                ${order.items.slice(0,3).map(i => `<img src="${formatImgUrl(i.productImage)}" style="width:34px;height:34px;border-radius:6px;object-fit:cover;border:1px solid #EADBCE;" title="${i.productName}" onerror="this.src='/images/hero-main.png'" />`).join('')}
+                ${order.items.length > 3 ? `<div style="width:34px;height:34px;border-radius:6px;background:#FAF7F4;display:flex;align-items:center;justify-content:center;font-size:0.72rem;font-weight:700;color:#7D6B5D;border:1px solid #EADBCE;">+${order.items.length-3}</div>` : ''}
               </div>
             </td>
-            <td><strong style="color:var(--accent);">${Store.formatPrice(order.total)}</strong></td>
-            <td style="font-size:.8rem;color:var(--text-light);">${order.paymentMethod.replace('Thanh toán khi nhận hàng','COD')}</td>
-            <td><span class="badge badge-${order.status}">${info.icon} ${info.label}</span></td>
-            <td style="font-size:.78rem;color:var(--text-light);">${Store.formatDate(order.createdAt)}</td>
-            <td>
-              <div style="display:flex;gap:4px;flex-wrap:wrap;">
-                <button class="btn btn-ghost btn-sm" onclick="openDetailModal('${order.id}')" title="Xem chi tiết">
+            <td><strong style="color:#8B5E3C;font-size:0.95rem;">${Store.formatPrice(order.total)}</strong></td>
+            <td><span style="font-size:0.82rem;background:#FAF7F4;padding:3px 8px;border-radius:4px;border:1px solid #EADBCE;">${(order.paymentMethod || '').replace('Thanh toán khi nhận hàng','COD')}</span></td>
+            <td><span class="badge badge-${order.status}">${info.icon || ''} ${info.label || order.status}</span></td>
+            <td style="font-size:0.8rem;color:#7D6B5D;">${Store.formatDate(order.createdAt)}</td>
+            <td style="text-align:center;">
+              <div style="display:flex;gap:5px;justify-content:center;flex-wrap:wrap;">
+                <button class="btn btn-outline btn-sm" onclick="openDetailModal('${order.id}')" title="Xem chi tiết đơn">
                   <i class="fas fa-eye"></i>
                 </button>
                 ${nextInfo ? `
-                <button class="btn btn-success btn-sm" onclick="advanceOrder('${order.id}','${nextSt}')" title="Chuyển sang: ${nextInfo.label}">
-                  ${nextInfo.icon} Tiếp
+                <button class="btn btn-primary btn-sm" style="padding:4px 10px;font-size:0.78rem;" onclick="advanceOrder('${order.id}','${nextSt}')" title="Chuyển sang: ${nextInfo.label}">
+                  ${nextInfo.icon} Chuyển
                 </button>` : ''}
                 ${canCancel ? `
-                <button class="btn btn-danger btn-sm" onclick="cancelOrder('${order.id}')" title="Hủy đơn">
+                <button class="btn btn-danger btn-sm" onclick="cancelOrder('${order.id}')" title="Hủy đơn này">
                   <i class="fas fa-times"></i>
                 </button>` : ''}
               </div>
@@ -234,16 +269,16 @@
 
     async function advanceOrder(orderId, newStatus) {
       const info = STATUS_INFO[newStatus.toUpperCase()] || {};
-      await Store.updateOrderStatus(orderId, newStatus, `Admin chuyển sang: ${info.label}`);
-      showToast(`Đã chuyển đơn sang: ${info.label}`);
+      await Store.updateOrderStatus(orderId, newStatus, `Quản trị viên chuyển trạng thái sang: ${info.label}`);
+      showToast(`Đơn ${orderId} đã chuyển sang: ${info.label}`);
       await renderOrderStats();
       await applyFilters();
     }
 
     async function cancelOrder(orderId) {
-      if (!confirm(`Hủy đơn hàng ${orderId}?`)) return;
-      await Store.updateOrderStatus(orderId, 'cancelled', 'Admin hủy đơn');
-      showToast('Đã hủy đơn hàng');
+      if (!confirm(`Bạn có chắc chắn muốn hủy đơn hàng ${orderId}?`)) return;
+      await Store.updateOrderStatus(orderId, 'cancelled', 'Quản trị viên hủy đơn hàng');
+      showToast(`Đã hủy đơn hàng ${orderId}`);
       await renderOrderStats();
       await applyFilters();
     }
@@ -252,68 +287,68 @@
       const order = await Store.getOrder(orderId);
       if (!order) return;
       const info = STATUS_INFO[order.status.toUpperCase()] || {};
-      document.getElementById('detail-modal-title').textContent = `Chi tiết: ${order.id}`;
+      document.getElementById('detail-modal-title').textContent = `Chi tiết đơn hàng: ${order.id}`;
       document.getElementById('detail-modal-body').innerHTML = `
-        <div style="display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-bottom:20px;font-size:.88rem;">
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-bottom:20px;font-size:0.9rem;background:#FAF7F4;padding:16px;border-radius:10px;border:1px solid #EADBCE;">
           <div>
-            <div style="color:var(--text-light);margin-bottom:2px;">Khách hàng</div>
-            <div style="font-weight:600;">${order.customer.name}</div>
-            <div>${order.customer.phone}</div>
-            ${order.customer.email ? `<div>${order.customer.email}</div>` : ''}
+            <div style="color:#7D6B5D;font-size:0.8rem;margin-bottom:2px;">Thông tin khách hàng</div>
+            <div style="font-weight:700;color:#2B1D14;">${order.customer ? order.customer.name : 'Khách vãng lai'}</div>
+            <div>${order.customer ? order.customer.phone : '–'}</div>
+            ${order.customer && order.customer.email ? `<div style="font-size:0.82rem;color:#7D6B5D;">${order.customer.email}</div>` : ''}
           </div>
           <div>
-            <div style="color:var(--text-light);margin-bottom:2px;">Địa chỉ</div>
-            <div>${order.customer.address}</div>
-            <div>${[order.customer.ward,order.customer.district,order.customer.city].filter(Boolean).join(', ')}</div>
+            <div style="color:#7D6B5D;font-size:0.8rem;margin-bottom:2px;">Địa chỉ giao hàng</div>
+            <div>${order.customer ? order.customer.address || '' : ''}</div>
+            <div>${[order.customer?.ward, order.customer?.district, order.customer?.city].filter(Boolean).join(', ')}</div>
           </div>
           <div>
-            <div style="color:var(--text-light);margin-bottom:2px;">Thanh toán</div>
-            <div>${order.paymentMethod}</div>
+            <div style="color:#7D6B5D;font-size:0.8rem;margin-bottom:2px;">Phương thức thanh toán</div>
+            <div style="font-weight:600;">${order.paymentMethod || 'COD'}</div>
           </div>
           <div>
-            <div style="color:var(--text-light);margin-bottom:2px;">Trạng thái</div>
-            <span class="badge badge-${order.status}">${info.icon} ${info.label}</span>
+            <div style="color:#7D6B5D;font-size:0.8rem;margin-bottom:2px;">Trạng thái hiện tại</div>
+            <span class="badge badge-${order.status}">${info.icon || ''} ${info.label || order.status}</span>
           </div>
-          ${order.customer.note ? `<div style="grid-column:1/-1;"><div style="color:var(--text-light);margin-bottom:2px;">Ghi chú</div><div style="background:var(--bg-section);padding:8px 12px;border-radius:var(--radius-sm);">${order.customer.note}</div></div>` : ''}
+          ${order.customer?.note ? `<div style="grid-column:1/-1;border-top:1px dashed #EADBCE;padding-top:8px;"><div style="color:#7D6B5D;font-size:0.8rem;">Ghi chú khách hàng:</div><div style="font-style:italic;">"${order.customer.note}"</div></div>` : ''}
         </div>
-        <div style="border-top:1px solid var(--border-light);padding-top:16px;margin-bottom:16px;">
-          <div style="font-weight:600;margin-bottom:12px;">Sản phẩm đặt hàng:</div>
+        <div style="margin-bottom:16px;">
+          <div style="font-weight:700;margin-bottom:12px;color:#2B1D14;">Danh sách sản phẩm trong đơn:</div>
           ${order.items.map(item => `
-            <div style="display:flex;gap:12px;align-items:center;margin-bottom:10px;">
-              <img src="${item.productImage}" style="width:48px;height:48px;border-radius:var(--radius-sm);object-fit:cover;" />
+            <div style="display:flex;gap:12px;align-items:center;margin-bottom:10px;padding:8px;border-bottom:1px solid #F1E9E1;">
+              <img src="${formatImgUrl(item.productImage)}" style="width:44px;height:44px;border-radius:8px;object-fit:cover;border:1px solid #EADBCE;" onerror="this.src='/images/hero-main.png'" />
               <div style="flex:1;">
-                <div style="font-size:.88rem;font-weight:600;">${item.productName}</div>
-                <div style="font-size:.78rem;color:var(--text-light);">x${item.quantity} · ${Store.formatPrice(item.price)}/cái</div>
+                <div style="font-size:0.9rem;font-weight:700;color:#2B1D14;">${item.productName}</div>
+                <div style="font-size:0.8rem;color:#7D6B5D;">Số lượng: <strong>x${item.quantity}</strong> · Đơn giá: ${Store.formatPrice(item.price)}</div>
               </div>
-              <div style="font-weight:700;color:var(--accent);">${Store.formatPrice(item.price * item.quantity)}</div>
+              <div style="font-weight:700;color:#8B5E3C;font-size:0.95rem;">${Store.formatPrice(item.price * item.quantity)}</div>
             </div>`).join('')}
-          <div style="display:flex;justify-content:space-between;padding:12px 0 0;border-top:1px solid var(--border-light);font-size:1rem;font-weight:700;color:var(--accent);">
-            <span>Tổng cộng</span>
+          <div style="display:flex;justify-content:space-between;padding:14px 8px 0;font-size:1.1rem;font-weight:800;color:#8B5E3C;">
+            <span>Tổng tiền thanh toán:</span>
             <span>${Store.formatPrice(order.total)}</span>
           </div>
         </div>
-        <div style="border-top:1px solid var(--border-light);padding-top:16px;">
-          <div style="font-weight:600;margin-bottom:10px;">Lịch sử trạng thái:</div>
-          ${order.statusHistory.map(h => {
+        <div style="border-top:1px solid #EADBCE;padding-top:16px;">
+          <div style="font-weight:700;margin-bottom:10px;color:#2B1D14;">Lịch sử tiến trình đơn hàng:</div>
+          ${(order.statusHistory || []).map(h => {
             const si = STATUS_INFO[(h.status||'').toUpperCase()] || {};
-            return `<div style="display:flex;gap:10px;font-size:.82rem;margin-bottom:8px;">
-              <span style="color:var(--text-light);white-space:nowrap;">${Store.formatDate(h.time)}</span>
+            return `<div style="display:flex;gap:10px;font-size:0.84rem;margin-bottom:8px;align-items:center;">
+              <span style="color:#7D6B5D;white-space:nowrap;font-size:0.78rem;">${Store.formatDate(h.time)}</span>
               <span class="badge badge-${h.status}">${si.icon||''} ${si.label||h.status}</span>
-              ${h.note ? `<span style="color:var(--text-light);">– ${h.note}</span>` : ''}
+              ${h.note ? `<span style="color:#5C4B3E;">– ${h.note}</span>` : ''}
             </div>`;
           }).join('')}
         </div>`;
-      document.getElementById('order-detail-modal').style.display = 'flex';
+      document.getElementById('order-detail-modal').classList.add('is-open');
     }
 
     function closeDetailModal() {
-      document.getElementById('order-detail-modal').style.display = 'none';
+      document.getElementById('order-detail-modal').classList.remove('is-open');
     }
 
     function handleAdminLogout() {
       Store.logoutAdmin();
       showToast('Đã đăng xuất khỏi tài khoản Admin');
-      setTimeout(() => { window.location.href = 'login.html'; }, 500);
+      setTimeout(() => { window.location.href = '/admin/login.html'; }, 500);
     }
 
     async function initPage() {

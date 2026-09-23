@@ -8,8 +8,8 @@
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,600;0,700;1,400&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet" />
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" />
-  <link rel="stylesheet" href="../css/style.css" />
-  <link rel="stylesheet" href="../css/components.css" />
+  <link rel="stylesheet" href="/css/style.css?v=4" />
+  <link rel="stylesheet" href="/css/components.css?v=4" />
   <style>
     body {
       min-height: 100vh;
@@ -110,11 +110,11 @@
 
   <div id="toast-container"></div>
 
-  <script src="../js/store.js"></script>
+  <script src="/js/store.js"></script>
   <script>
     // Redirect if already logged in as admin
     if (Store.getCurrentAdmin()) {
-      window.location.href = 'index.html';
+      window.location.href = '/admin/index.html';
     }
 
     function showToast(msg, type = 'success') {
@@ -141,7 +141,7 @@
 
       if (res.success) {
         showToast('Đăng nhập Admin thành công!');
-        setTimeout(() => { window.location.href = 'index.html'; }, 600);
+        setTimeout(() => { window.location.href = '/admin/index.html'; }, 500);
       } else {
         showToast(res.message, 'error');
       }

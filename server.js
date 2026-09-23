@@ -15,6 +15,15 @@ app.use(cors());
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
+// Disable caching for CSS/JS to ensure fresh files are always served
+app.use((req, res, next) => {
+  if (req.url.match(/\.(css|js)(\?.*)?$/)) {
+    res.setHeader('Cache-Control', 'no-store, no-cache, must-revalidate');
+    res.setHeader('Pragma', 'no-cache');
+  }
+  next();
+});
+
 // Serve static frontend files
 app.use(express.static(path.join(__dirname)));
 
@@ -808,7 +817,19 @@ app.post('/api/reset', async (req, res) => {
   }
 });
 
-// Fallback route for SPA / HTML files
+// Page routes without .html extension
+const pages = ['products', 'product-detail', 'cart', 'checkout', 'orders'];
+pages.forEach(page => {
+  app.get(`/${page}`, (req, res) => {
+    res.sendFile(path.join(__dirname, `${page}.html`));
+  });
+});
+app.get('/admin', (req, res) => res.sendFile(path.join(__dirname, 'admin/index.html')));
+app.get('/admin/products', (req, res) => res.sendFile(path.join(__dirname, 'admin/products.html')));
+app.get('/admin/orders', (req, res) => res.sendFile(path.join(__dirname, 'admin/orders.html')));
+app.get('/admin/reviews', (req, res) => res.sendFile(path.join(__dirname, 'admin/reviews.html')));
+
+// Fallback → index
 app.get('*', (req, res) => {
   res.sendFile(path.join(__dirname, 'index.html'));
 });
