@@ -8,8 +8,8 @@
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,600;0,700;1,400&family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" />
-  <link rel="stylesheet" href="css/style.css?v=3" />
-  <link rel="stylesheet" href="css/components.css?v=3" />
+  <link rel="stylesheet" href="/css/style.css?v=4" />
+  <link rel="stylesheet" href="/css/components.css?v=4" />
 </head>
 <body>
   <!-- NAVBAR -->
@@ -91,31 +91,49 @@
   </div>
 
   <!-- CANCEL ORDER MODAL -->
-  <div id="cancel-modal" class="modal-overlay" style="display:none;">
-    <div class="modal">
+  <div id="cancel-modal" class="modal-overlay">
+    <div class="modal" style="max-width:460px;">
       <div class="modal__header">
-        <h3>Hủy đơn hàng</h3>
+        <div style="display:flex;align-items:center;gap:10px;">
+          <div style="width:36px;height:36px;border-radius:50%;background:#FEE2E2;display:flex;align-items:center;justify-content:center;color:#DC2626;font-size:1.1rem;">
+            <i class="fas fa-times"></i>
+          </div>
+          <h3 style="margin:0;font-size:1.15rem;">Hủy đơn hàng</h3>
+        </div>
         <button class="modal__close" onclick="closeCancelModal()">×</button>
       </div>
       <div class="modal__body">
-        <p style="color:var(--text-medium);margin-bottom:16px;">
-          Bạn có chắc muốn hủy đơn hàng <strong id="cancel-order-id"></strong>?<br/>
-          Hàng tồn kho sẽ được hoàn lại tự động trong Database.
-        </p>
-        <div class="form-group mb-0">
-          <label class="form-label">Lý do hủy</label>
+        <div style="background:#FEF2F2;border:1px solid #FECACA;border-radius:10px;padding:14px;margin-bottom:20px;">
+          <div style="font-size:0.88rem;color:#7F1D1D;line-height:1.6;">
+            ⚠️ Bạn đang yêu cầu hủy đơn hàng
+            <strong id="cancel-order-id" style="color:#DC2626;font-family:monospace;"></strong>.<br/>
+            Sau khi hủy, số lượng tồn kho sẽ được hoàn lại tự động.
+          </div>
+        </div>
+        <div class="form-group" style="margin-bottom:12px;">
+          <label class="form-label">Lý do hủy đơn <span class="required">*</span></label>
           <select id="cancel-reason" class="form-control">
-            <option>Đặt nhầm sản phẩm</option>
-            <option>Thay đổi địa chỉ</option>
-            <option>Tìm thấy giá tốt hơn</option>
-            <option>Không còn nhu cầu</option>
-            <option>Lý do khác</option>
+            <option value="Đặt nhầm sản phẩm">🛒 Đặt nhầm sản phẩm</option>
+            <option value="Thay đổi địa chỉ giao hàng">📍 Thay đổi địa chỉ giao hàng</option>
+            <option value="Tìm thấy giá tốt hơn ở nơi khác">💰 Tìm thấy giá tốt hơn ở nơi khác</option>
+            <option value="Chờ quá lâu, muốn hủy">⏱️ Chờ xác nhận quá lâu</option>
+            <option value="Không còn nhu cầu mua">❌ Không còn nhu cầu mua</option>
+            <option value="Lý do cá nhân khác">📝 Lý do cá nhân khác</option>
           </select>
+        </div>
+        <div class="form-group mb-0">
+          <label class="form-label">Ghi chú thêm (tùy chọn)</label>
+          <textarea id="cancel-note-extra" class="form-control" rows="2"
+            placeholder="Mô tả thêm về lý do hủy (nếu có)..."></textarea>
         </div>
       </div>
       <div class="modal__footer">
-        <button class="btn btn-ghost" onclick="closeCancelModal()">Không</button>
-        <button class="btn btn-danger" onclick="confirmCancel()">Hủy đơn</button>
+        <button class="btn btn-ghost" onclick="closeCancelModal()">
+          <i class="fas fa-arrow-left"></i> Giữ đơn hàng
+        </button>
+        <button class="btn btn-danger" id="confirm-cancel-btn" onclick="confirmCancel()">
+          <i class="fas fa-times-circle"></i> Xác nhận hủy đơn
+        </button>
       </div>
     </div>
   </div>
@@ -137,7 +155,7 @@
 
   <div id="toast-container"></div>
 
-  <script src="js/store.js"></script>
+  <script src="/js/store.js"></script>
   <script>
     let currentStatusFilter = 'all';
     let cancelOrderId = null;
@@ -234,20 +252,32 @@
                 </div>
                 <div class="order-item__info">
                   <div class="order-item__name">
-                    <a href="product-detail.html?id=${item.productId}" style="color:var(--text-dark);">${item.productName}</a>
+                    <a href="/product-detail.html?id=${item.productId}" style="color:var(--text-dark);">${item.productName}</a>
                   </div>
                   <div class="order-item__qty">x${item.quantity} · ${Store.formatPrice(item.price)}/cái</div>
                 </div>
                 <div class="order-item__price">${Store.formatPrice(item.price * item.quantity)}</div>
-                ${canReview ? `<a href="product-detail.html?id=${item.productId}#review-form-section" class="btn btn-outline btn-sm" style="white-space:nowrap;"><i class="fas fa-star"></i> Đánh giá</a>` : ''}
+                ${canReview ? `<a href="/product-detail.html?id=${item.productId}#review-form-section" class="btn btn-outline btn-sm" style="white-space:nowrap;"><i class="fas fa-star"></i> Đánh giá</a>` : ''}
               </div>`).join('')}
           </div>
 
           <!-- Actions -->
-          <div style="display:flex;gap:10px;flex-wrap:wrap;border-top:1px solid var(--border-light);padding-top:16px;">
-            ${canCancel ? `<button class="btn btn-danger btn-sm" onclick="openCancelModal('${order.id}')">
-              <i class="fas fa-times"></i> Hủy đơn
-            </button>` : ''}
+          <div style="display:flex;gap:10px;flex-wrap:wrap;align-items:center;border-top:1px solid var(--border-light);padding-top:16px;">
+            ${canCancel ? `
+            <button class="btn btn-danger btn-sm" onclick="openCancelModal('${order.id}')">
+              <i class="fas fa-times-circle"></i> Yêu cầu hủy đơn
+            </button>
+            <span style="display:flex;align-items:center;gap:5px;font-size:.78rem;color:var(--text-light);">
+              <i class="fas fa-info-circle"></i> Chỉ hủy được khi đơn chưa vào giai đoạn chuẩn bị
+            </span>` : ''}
+            ${order.status === 'cancelled' ? `
+            <span style="display:flex;align-items:center;gap:6px;font-size:.84rem;color:#DC2626;font-weight:600;">
+              <i class="fas fa-check-circle"></i> Đơn này đã được hủy – hàng tồn kho đã hoàn lại
+            </span>` : ''}
+            ${(order.status === 'shipping' || order.status === 'preparing') ? `
+            <span style="display:flex;align-items:center;gap:6px;font-size:.82rem;color:var(--text-light);">
+              <i class="fas fa-lock"></i> Đơn đã vào giai đoạn xử lý / vận chuyển – không thể hủy
+            </span>` : ''}
             ${order.customer.note ? `<div style="flex:1;font-size:.82rem;color:var(--text-light);display:flex;align-items:center;gap:6px;"><i class="fas fa-sticky-note"></i> Ghi chú: ${order.customer.note}</div>` : ''}
           </div>
         </div>`;
@@ -308,22 +338,53 @@
 
     function openCancelModal(orderId) {
       cancelOrderId = orderId;
-      document.getElementById('cancel-order-id').textContent = orderId;
-      document.getElementById('cancel-modal').style.display = 'flex';
+      document.getElementById('cancel-order-id').textContent = ' ' + orderId;
+      // Reset form fields
+      document.getElementById('cancel-reason').selectedIndex = 0;
+      const extraEl = document.getElementById('cancel-note-extra');
+      if (extraEl) extraEl.value = '';
+      // Reset button
+      const btn = document.getElementById('confirm-cancel-btn');
+      if (btn) {
+        btn.disabled = false;
+        btn.innerHTML = '<i class="fas fa-times-circle"></i> Xác nhận hủy đơn';
+      }
+      // Use is-open class (matches global CSS system)
+      document.getElementById('cancel-modal').classList.add('is-open');
     }
 
     function closeCancelModal() {
       cancelOrderId = null;
-      document.getElementById('cancel-modal').style.display = 'none';
+      document.getElementById('cancel-modal').classList.remove('is-open');
     }
 
     async function confirmCancel() {
       if (!cancelOrderId) return;
-      const note = document.getElementById('cancel-reason').value;
-      await Store.updateOrderStatus(cancelOrderId, 'cancelled', note);
-      closeCancelModal();
-      showToast('Đã hủy đơn hàng thành công');
-      await renderOrders();
+      const reason = document.getElementById('cancel-reason').value;
+      const extraEl = document.getElementById('cancel-note-extra');
+      const extra  = extraEl ? extraEl.value.trim() : '';
+      const note   = extra ? `${reason} – ${extra}` : reason;
+
+      // Show loading state
+      const btn = document.getElementById('confirm-cancel-btn');
+      if (btn) {
+        btn.disabled = true;
+        btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Đang hủy đơn...';
+      }
+
+      try {
+        await Store.updateOrderStatus(cancelOrderId, 'cancelled', `Khách hàng tự hủy: ${note}`);
+        const cancelledId = cancelOrderId;
+        closeCancelModal();
+        showToast(`✅ Đã hủy đơn hàng ${cancelledId} thành công!`);
+        await renderOrders();
+      } catch (err) {
+        if (btn) {
+          btn.disabled = false;
+          btn.innerHTML = '<i class="fas fa-times-circle"></i> Xác nhận hủy đơn';
+        }
+        showToast('Không thể hủy đơn hàng. Vui lòng thử lại!', 'error');
+      }
     }
 
     async function initPage() {
